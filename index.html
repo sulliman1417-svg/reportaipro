@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -147,27 +148,15 @@
         .toast-show { opacity: 1 !important; }
         
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        #api-key-modal, #custom-confirm-modal { backdrop-filter: blur(5px); }
+        #api-key-modal { backdrop-filter: blur(5px); }
     </style>
 </head>
 <body class="flex flex-col items-center min-h-screen relative">
 
     <div id="toast">تم الإجراء بنجاح</div>
 
-    <!-- نافذة تأكيد مخصصة بديلة لـ window.confirm -->
-    <div id="custom-confirm-modal" class="fixed inset-0 bg-slate-900 bg-opacity-60 z-[999999] hidden flex items-center justify-center print-hidden">
-        <div class="bg-white rounded-2xl p-8 w-[400px] max-w-[90%] shadow-2xl border border-slate-200 text-center">
-            <h3 class="text-xl font-black text-moeDarkBlue mb-4 font-cairo">⚠️ تأكيد الإجراء</h3>
-            <p id="custom-confirm-msg" class="text-slate-600 font-bold mb-6 text-sm"></p>
-            <div class="flex gap-3 justify-center">
-                <button id="custom-confirm-yes" class="bg-red-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-red-700 transition shadow-md">نعم، متأكد</button>
-                <button onclick="document.getElementById('custom-confirm-modal').classList.add('hidden')" class="bg-slate-100 text-slate-700 px-6 py-2.5 rounded-lg font-bold hover:bg-slate-200 transition border border-slate-300">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
     <!-- نافذة إعداد مفتاح API المطابقة للمرجع 100% -->
-    <div id="api-key-modal" class="fixed inset-0 bg-slate-900 bg-opacity-80 z-[99999] hidden flex items-center justify-center print-hidden">
+    <div id="api-key-modal" class="fixed inset-0 bg-slate-900 bg-opacity-80 z-[999999] hidden flex items-center justify-center print-hidden">
         <div class="bg-white rounded-2xl p-8 w-[500px] max-w-[90%] shadow-2xl border border-slate-200 relative">
             <button onclick="closeApiModal()" class="absolute top-4 right-4 text-slate-400 hover:text-red-500 font-bold text-xl">✖</button>
             <h3 class="text-2xl font-black text-moeDarkBlue mb-2 font-cairo flex items-center gap-2">
@@ -190,7 +179,7 @@
     </div>
 
     <!-- نافذة إعادة توليد الصفحة المحددة -->
-    <div id="regen-modal" class="fixed inset-0 bg-slate-900 bg-opacity-60 z-[9999] hidden flex items-center justify-center print-hidden backdrop-blur-sm">
+    <div id="regen-modal" class="fixed inset-0 bg-slate-900 bg-opacity-60 z-[99999] hidden flex items-center justify-center print-hidden backdrop-blur-sm">
         <div class="bg-white rounded-2xl p-6 w-[420px] shadow-2xl border border-slate-200">
             <h3 class="text-xl font-black text-moeDarkBlue mb-4 font-cairo flex items-center gap-2">🔄 إعداد محتوى الصفحة رقم <span id="regen-page-num" class="text-moeGreen bg-emerald-50 px-2 rounded border border-emerald-100"></span></h3>
             <label class="block text-sm font-bold text-slate-700 mb-2">كيف تريد هيكلة هذه الصفحة بذكاء؟</label>
@@ -584,16 +573,6 @@
             });
         };
 
-        // دالة مخصصة للتأكيد بدلاً من window.confirm الممنوعة برمجياً في البيئة
-        function customConfirm(msg, onConfirm) {
-            document.getElementById('custom-confirm-msg').innerText = msg;
-            document.getElementById('custom-confirm-modal').classList.remove('hidden');
-            document.getElementById('custom-confirm-yes').onclick = function() {
-                document.getElementById('custom-confirm-modal').classList.add('hidden');
-                if(onConfirm) onConfirm();
-            };
-        }
-
         function openApiModal() {
             document.getElementById('input-api-key').value = currentApiKey;
             document.getElementById('api-key-modal').classList.remove('hidden');
@@ -607,7 +586,7 @@
         async function saveApiKey() {
             const val = document.getElementById('input-api-key').value.trim();
             if (!val) {
-                showToast('يرجى إدخال مفتاح صالح أو إغلاق النافذة للمتابعة بدون ذكاء اصطناعي.', 'warn');
+                alert('يرجى إدخال مفتاح صالح أو إغلاق النافذة للمتابعة بدون ذكاء اصطناعي.');
                 return;
             }
 
@@ -636,9 +615,9 @@
                         if (errData.error?.message) errMsg = errData.error.message;
                     } catch (_) {}
                     if (testResp.status === 400 && /API key not valid/i.test(errMsg)) {
-                        showToast('مفتاح API غير صالح. يرجى التحقق من نسخه بشكل صحيح من Google AI Studio.', 'error');
+                        alert('مفتاح API غير صالح. يرجى التحقق من نسخه بشكل صحيح من Google AI Studio.');
                     } else {
-                        showToast('تعذر الاتصال بخوادم Gemini: ' + errMsg, 'error');
+                        alert('تعذر الاتصال بخوادم Gemini: ' + errMsg);
                     }
                     return;
                 }
@@ -648,7 +627,7 @@
                 showToast('تم حفظ مفتاح API والاتصال بخوادم Gemini بنجاح ✔️');
                 closeApiModal();
             } catch (e) {
-                showToast('تعذر الاتصال بخوادم Gemini. يرجى التحقق من اتصال الإنترنت ثم إعادة المحاولة.\n' + (e.message || ''), 'error');
+                alert('تعذر الاتصال بخوادم Gemini. يرجى التحقق من اتصال الإنترنت ثم إعادة المحاولة.\n' + (e.message || ''));
             } finally {
                 if (saveBtn) {
                     saveBtn.disabled = false;
@@ -844,11 +823,11 @@
         }
 
         function deletePage(idx) {
-            customConfirm('هل أنت متأكد من حذف هذه الصفحة بالكامل؟', () => {
+            if (confirm('هل أنت متأكد من حذف هذه الصفحة بالكامل؟')) {
                 currentReportData.pages.splice(idx, 1);
                 saveToHistory(currentReportData);
                 renderReport();
-            });
+            }
         }
 
         function addEmptyPage(idx) {
@@ -1086,10 +1065,10 @@
         }
 
         function resetAllSettings() {
-            customConfirm("⚠️ هل أنت متأكد من رغبتك في استعادة الإعدادات الافتراضية؟ سيتم مسح جميع بياناتك المحفوظة.", () => {
+            if (confirm("⚠️ هل أنت متأكد من رغبتك في استعادة الإعدادات الافتراضية؟ سيتم مسح جميع بياناتك المحفوظة.")) {
                 localStorage.removeItem('smartReportSettings');
                 location.reload();
-            });
+            }
         }
 
         const toolbar = document.getElementById('floating-toolbar');
@@ -1501,3 +1480,5 @@ ${committeeText}\n\n${instructionsStr}`;
     </script>
 </body>
 </html>
+
+```
