@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>نظام التقارير الذكي - مدرسة سهيل بن عمرو الثانوية</title>
     
-    <!-- الخطوط شاملة المراعي وأميري وتشانجا -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;900&family=Tajawal:wght@400;500;700;900&family=Almarai:wght@400;700;800&family=Amiri:wght@400;700&family=Changa:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- مكتبات -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -26,7 +24,6 @@
     </script>
     
     <style>
-        /* ================= أساسيات الصفحة والطباعة ================= */
         :root { 
             --img-fit: cover; 
             --img-height: 200px; 
@@ -35,11 +32,9 @@
         * { box-sizing: border-box !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         body { background-color: #f1f5f9; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
 
-        /* منطقة المعاينة */
         #preview-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; transform-origin: top center; margin: 20px 0 40px 0; }
         @page { size: A4 portrait; margin: 0; }
         
-        /* الورقة A4 الصارمة */
         .a4-page { 
             width: 210mm; 
             height: 297mm; 
@@ -53,7 +48,6 @@
             border-radius: 4px;
         }
 
-        /* صفحة A4 فرعية (تُستخدم في الخطة التشغيلية متعددة الصفحات) */
         .sub-page-a4 {
             width: 210mm;
             height: 297mm;
@@ -70,14 +64,11 @@
             break-after: page;
         }
 
-        /* ================= الترويسة المشتركة ================= */
         .header-section { position: relative; height: 48mm; width: 100%; background: linear-gradient(135deg, #1a365d 0%, #18a883 100%); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; color: white; z-index: 10; flex-shrink: 0; }
         .header-content { position: absolute; inset: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 10mm; }
         
-        /* الحفاظ على مركزية العنوان وإصلاح التصدير كصورة */
         .title-badge { background-color: #1a365d; color: white; padding: 6px 35px 8px; border-radius: 9999px; font-family: 'Cairo', sans-serif; font-size: 15pt; font-weight: 900; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.15); margin-top: -22px; z-index: 20; position: relative; text-align: center; max-width: 80%; line-height: 1.4; display: inline-block; vertical-align: top;}
         
-        /* شريط المعلومات */
         .info-bar-wrapper { margin: 6mm 10mm 0; border: 1.5px solid #e2e8f0; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
         .info-bar { display: grid; grid-template-columns: repeat(4, 1fr); background-color: white; padding: 6px 0; }
         .info-item { display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid #e2e8f0; padding: 0 4px;}
@@ -85,67 +76,34 @@
         .info-label { color: #18a883; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 8.5pt; text-transform: uppercase; }
         .info-value { color: #1a365d; font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 10.5pt; text-align: center; word-break: break-word;}
 
-        /* حاويات الـ QR Code */
         .qr-container { position: absolute; z-index: 30; background: white; padding: 4px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: none; }
         #qr-top-right { top: 5mm; right: 5mm; }
         #qr-top-left { top: 5mm; left: 5mm; }
         #qr-footer-center { background: white; padding: 4px; border-radius: 8px; border: 1px solid #e2e8f0; display: none; margin: 0 auto; }
 
-        /* ================= منطقة المحتوى المرنة ================= */
-        .main-content { padding: 4mm 10mm; flex: 1 1 0; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; position: relative; }
+        .main-content { padding: 4mm 10mm; flex: 1 1 0; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; position: relative; transition: padding 0.3s ease; }
         .main-content::-webkit-scrollbar { width: 4px; }
         .main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-        /* أداة الزووم والاحتواء للمحتوى */
         .scale-wrapper { width: 100%; height: 100%; transform-origin: top center; transition: transform 0.2s ease; display: flex; flex-direction: column;}
 
         [contenteditable="true"] { outline: 2px dashed transparent; transition: 0.2s; border-radius: 4px; padding: 2px; }
         [contenteditable="true"]:hover { outline-color: #cbd5e1; }
         [contenteditable="true"]:focus { outline-color: #18a883; background: #fff; box-shadow: 0 0 0 3px rgba(24,168,131,0.1); }
 
-        /* حاويات التخطيط */
-        .layout-container { display: flex; gap: 15px; height: 100%; width: 100%; transition: 0.3s ease; }
-        .text-col { width: 50%; display: flex; flex-direction: column; gap: 10px; transition: width 0.3s ease; height: 100%; overflow: hidden;}
-        .evidence-col { width: 50%; display: flex; flex-direction: column; transition: width 0.3s ease; height: 100%; overflow: hidden;}
-
-        /* ================= القوالب ================= */
-        .box-title-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; border-bottom: 2px solid #eab308; padding-bottom: 4px; }
-        .box-title { font-family: 'Cairo', sans-serif; font-size: 12.5pt; font-weight: 900; color: #1a365d; margin:0;}
-        .box-text { font-family: 'Tajawal', sans-serif; font-size: 10.5pt; line-height: 1.7; color: #1f2937; text-align: justify; }
-        .t-box { background-color: white; border: 1.5px solid #eab308; border-radius: 8px; padding: 10px 12px; }
-        
-        .default-evidence-header, .teacher-evidence-header { background-color: #1a365d; color: white; font-family: 'Cairo', sans-serif; font-size: 12pt; font-weight: 700; text-align: center; padding: 4px; border-top-left-radius: 8px; border-top-right-radius: 8px; flex-shrink: 0;}
-        .teacher-evidence-header { background: linear-gradient(135deg, #18a883, #0d9668); border-radius: 12px 12px 0 0;}
-        
-        .default-evidence-container { background-color: white; border: 1.5px solid #1a365d; border-top: none; border-radius: 0 0 8px 8px; padding: 8px; flex-grow: 1; display: grid; gap: 8px; align-content: start;}
-        .teacher-evidence-container { flex: 1; border: 1.5px solid #18a883; border-top: none; border-radius: 0 0 12px 12px; padding: 10px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; min-height: 0; }
-
-        .content-card { background: white; border: 1.5px solid #eab308; border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-        .section-heading { font-family: 'Cairo', sans-serif; font-size: 13pt; font-weight: 900; color: #1a365d; border-bottom: 2.5px solid #eab308; display: inline-block; padding-bottom: 3px; margin-bottom: 8px; }
-        .teacher-text { font-family: 'Tajawal', sans-serif; font-size: 10.5pt; color: #334155; line-height: 1.7; text-align: justify; }
-
-        /* ================= الشواهد والصور ================= */
         .evidence-photo-wrapper { width: 100%; border-radius: 6px; overflow: hidden; background-color: #f8fafc; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; min-height: var(--img-height); height: var(--img-height); position: relative;}
         .evidence-photo { width: 100%; height: 100%; object-fit: var(--img-fit); position: absolute; inset: 0; }
-        .span-2-cols { grid-column: span 2; }
-        .teacher-photo-slot { flex: 1; width: 100%; border-radius: 10px; overflow: hidden; background: #f8fafc; display: flex; align-items: center; justify-content: center; border: 2px dashed #e2e8f0; min-height: var(--img-height); position: relative;}
-        .teacher-photo-slot img { width: 100%; height: 100%; object-fit: var(--img-fit); position: absolute; inset: 0; }
-
-        /* ================= إصلاحات التصدير كصورة ================= */
-        #report-element { direction: rtl; }
         
+        #report-element { direction: rtl; }
         #report-element ul { list-style: none !important; padding-right: 0 !important; margin-right: 0 !important; }
         #report-element ul > li { position: relative !important; padding-right: 16px !important; margin-bottom: 4px; text-align: right !important; }
         #report-element ul > li::before { content: "▪" !important; position: absolute !important; right: 0 !important; top: 2px !important; color: inherit !important; font-size: 0.9em !important; }
         #report-element ol { padding-right: 20px !important; direction: rtl; text-align: right; }
         #report-element table { direction: rtl !important; text-align: right !important; }
 
-        /* ================= قالب الذكاء الاصطناعي والخطة ================= */
         #ai-content-area, #op-plan-content-area { width: 100%; flex-grow: 1; display: flex; flex-direction: column;}
-        
         .footer-section { height: 25mm; padding: 0 10mm; display: flex; justify-content: space-between; align-items: center; border-top: 1.5px solid #e5e7eb; background-color: white; flex-shrink: 0; position: relative;}
 
-        /* ================= لوحة التحكم ================= */
         .glass-panel { background: white; border: 1px solid #e2e8f0; }
         .input-styled { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.875rem; outline: none; transition: 0.2s; }
         .input-styled:focus { border-color: #18a883; box-shadow: 0 0 0 3px rgba(24, 168, 131, 0.1); }
@@ -157,7 +115,6 @@
         .mini-thumb-wrapper { position: relative; }
         .del-thumb { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; z-index: 5;}
 
-        /* شريط التنسيق العائم (Floating Toolbar) */
         #floating-toolbar { position: absolute; background: #1a365d; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); padding: 8px; display: flex; flex-direction: column; gap: 8px; z-index: 9999; transform: translateY(-130%); transition: opacity 0.2s; opacity: 0; pointer-events: none; width: max-content; border: 1px solid rgba(255,255,255,0.1);}
         #floating-toolbar.active { opacity: 1; pointer-events: auto; }
         .ft-row { display: flex; gap: 6px; align-items: center; }
@@ -165,14 +122,10 @@
         .ft-btn { background: #2d4a77; color: white; border: none; border-radius: 6px; padding: 4px 10px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: 'Cairo'; transition: 0.2s;}
         .ft-btn:hover { background: #18a883; transform: translateY(-1px); }
         .ft-color { width: 28px; height: 28px; padding: 0; border: none; border-radius: 6px; cursor: pointer; overflow: hidden; transition: 0.2s; }
-        .ft-color:hover { transform: scale(1.1); }
         .ft-swatch { width: 24px; height: 24px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); cursor: pointer; transition: 0.2s; }
-        .ft-swatch:hover { transform: scale(1.15); border-color: white; }
         .ft-apply-btn { background: linear-gradient(135deg, #fde047, #eab308); color: #1a365d; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 900; cursor: pointer; transition: 0.2s; border: none; }
-        .ft-apply-btn:hover { background: white; color: #18a883; }
 
         @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(24, 168, 131, 0.4); transform: scale(1); } 50% { box-shadow: 0 0 20px 8px rgba(24, 168, 131, 0.6); transform: scale(1.02); } }
-        .btn-generating { animation: pulse-glow 1.5s infinite; background-color: #1a365d !important; cursor: not-allowed; }
         
         @media print {
             body { background-color: white; overflow: visible; }
@@ -182,34 +135,46 @@
             .sub-page-a4 { box-shadow: none !important; margin: 0 !important; border-radius: 0; border: none !important; }
             .main-content { overflow: hidden !important; } 
             [contenteditable="true"] { outline: none !important; }
-            .t-box, .content-card, .evidence-photo-wrapper, .teacher-photo-slot { page-break-inside: avoid !important; }
+            .content-card { page-break-inside: avoid !important; }
         }
 
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1a365d; color: white; padding: 10px 20px; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; z-index: 99999; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1a365d; color: white; padding: 12px 24px; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; z-index: 999999; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;}
         .toast-show { opacity: 1 !important; }
         
-        /* أداة إدخال الخط الرقمية */
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        #api-key-modal { backdrop-filter: blur(5px); }
     </style>
 </head>
 <body class="flex flex-col items-center min-h-screen relative">
 
     <div id="toast">تم الإجراء بنجاح</div>
 
-    <!-- نافذة إعادة توليد الصفحة المحددة -->
+    <div id="api-key-modal" class="fixed inset-0 bg-slate-900 bg-opacity-80 z-[999999] hidden flex items-center justify-center print-hidden">
+        <div class="bg-white rounded-2xl p-8 w-[500px] max-w-[90%] shadow-2xl border border-slate-200 relative">
+            <button onclick="closeApiModal()" class="absolute top-4 right-4 text-slate-400 hover:text-red-500 font-bold text-xl">✖</button>
+            <h3 class="text-2xl font-black text-moeDarkBlue mb-2 font-cairo flex items-center gap-2">🔑 إعداد مفتاح الذكاء الاصطناعي</h3>
+            <p class="text-sm font-bold text-slate-500 mb-6 leading-relaxed">لكي يعمل النظام بشكل صحيح ويقوم بتوليد الخطط والتقارير، يرجى إدخال مفتاح <strong class="text-moeGreen">Google Gemini API</strong> الخاص بك.</p>
+            <div class="mb-5">
+                <label class="block text-sm font-bold text-slate-700 mb-2">مفتاح API الخاص بك:</label>
+                <input type="password" id="input-api-key" class="w-full border-2 border-slate-300 rounded-lg px-4 py-3 text-sm font-bold outline-none focus:border-moeGreen bg-slate-50 text-slate-800" placeholder="AIzaSyA...">
+            </div>
+            <div id="api-status-display" class="mb-4 hidden p-3 rounded-lg border text-sm font-bold leading-relaxed"></div>
+            <div class="flex gap-2">
+                <button id="btn-save-api-key" onclick="saveApiKey()" class="flex-1 bg-moeDarkBlue text-white font-bold py-3 rounded-lg hover:bg-blue-900 transition shadow-md flex justify-center items-center gap-2">اختبار وحفظ 🚀</button>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="bg-slate-100 text-slate-700 border border-slate-300 font-bold py-3 px-4 rounded-lg hover:bg-slate-200 transition text-sm flex items-center justify-center">الحصول على مفتاح</a>
+            </div>
+        </div>
+    </div>
+
     <div id="regen-modal" class="fixed inset-0 bg-slate-900 bg-opacity-60 z-[99999] hidden flex items-center justify-center print-hidden backdrop-blur-sm">
         <div class="bg-white rounded-2xl p-6 w-[420px] shadow-2xl border border-slate-200">
-            <h3 class="text-xl font-black text-moeDarkBlue mb-4 font-cairo flex items-center gap-2">
-                🔄 إعادة توليد الصفحة رقم <span id="regen-page-num" class="text-moeGreen bg-emerald-50 px-2 rounded border border-emerald-100"></span>
-            </h3>
+            <h3 class="text-xl font-black text-moeDarkBlue mb-4 font-cairo flex items-center gap-2">🔄 إعادة توليد الصفحة رقم <span id="regen-page-num" class="text-moeGreen bg-emerald-50 px-2 rounded border border-emerald-100"></span></h3>
             <label class="block text-sm font-bold text-slate-700 mb-2">اختر النمط المناسب للتوليد الجديد:</label>
             <select id="regen-style" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-5 text-sm font-bold outline-none focus:border-moeGreen text-slate-700 bg-slate-50">
                 <option value="auto">🤖 خليط (يحدد الذكاء الاصطناعي الأنسب)</option>
                 <option value="text">📝 نص عادي (سردي ومنظم)</option>
                 <option value="table">📊 جدول إحصائي / تنظيمي مضغوط</option>
                 <option value="infographic">🗂️ بطاقات (إنفوجرافيك / رسم بياني)</option>
-                <option value="bullets">🔢 ترقيم جرافيكي (نقاط ملونة ومتسلسلة)</option>
             </select>
             <div class="flex gap-2">
                 <button onclick="confirmRegenerate()" class="flex-1 bg-moeGreen text-white font-bold py-2.5 rounded-lg hover:bg-emerald-600 transition shadow-md" id="btn-confirm-regen">توليد الآن ✨</button>
@@ -218,7 +183,6 @@
         </div>
     </div>
 
-    <!-- شريط التنسيق العائم -->
     <div id="floating-toolbar">
         <div class="ft-row">
             <button class="ft-btn" onclick="formatText('undo')" title="تراجع خطوة">↶</button>
@@ -234,9 +198,9 @@
             <button class="ft-btn" onclick="formatBlock('P')" title="نص عادي">P</button>
             <div class="ft-divider"></div>
             <div class="flex items-center bg-slate-800 rounded-md border border-slate-600 overflow-hidden h-[26px]">
-                <button class="ft-btn !rounded-none !border-0 bg-transparent hover:bg-slate-700 text-white px-2 h-full flex items-center justify-center" onclick="changeFontSize(-1)">-</button>
+                <button class="ft-btn !rounded-none !border-0 bg-transparent hover:bg-slate-700 text-white px-2 h-full" onclick="changeFontSize(-1)">-</button>
                 <input type="number" id="ft-font-size-input" class="w-10 bg-transparent text-white text-center text-[13px] font-bold outline-none border-x border-slate-600 m-0 p-0 h-full" value="12" onchange="setFontSizeExact(this.value)">
-                <button class="ft-btn !rounded-none !border-0 bg-transparent hover:bg-slate-700 text-white px-2 h-full flex items-center justify-center" onclick="changeFontSize(1)">+</button>
+                <button class="ft-btn !rounded-none !border-0 bg-transparent hover:bg-slate-700 text-white px-2 h-full" onclick="changeFontSize(1)">+</button>
             </div>
         </div>
         <div class="ft-row justify-between border-t border-slate-600 pt-2 mt-1">
@@ -257,50 +221,38 @@
                 <button class="ft-btn bg-red-600 hover:bg-red-500" onclick="deleteTableCol()" title="حذف عمود">◫-</button>
             </div>
             <div class="ft-row gap-1">
-                <input type="color" class="ft-color" onchange="changeTableHeaderColor(this.value)" title="تغيير لون الترويسة كاملة">
-                <input type="color" class="ft-color border-dashed" onchange="changeTableCellColor(this.value)" title="تغيير لون الخلية المحددة">
+                <input type="color" class="ft-color" onchange="changeTableHeaderColor(this.value)" title="تغيير لون الترويسة">
+                <input type="color" class="ft-color border-dashed" onchange="changeTableCellColor(this.value)" title="تغيير لون الخلية">
             </div>
         </div>
     </div>
 
-    <!-- ================= لوحة التحكم ================= -->
     <div id="control-panel" class="print-hidden w-full max-w-5xl glass-panel shadow-lg rounded-2xl p-6 m-4 z-50">
         <div class="flex flex-wrap justify-between items-center mb-6 border-b border-slate-200 pb-4 gap-4">
             <h2 class="font-cairo text-2xl font-black text-moeDarkBlue flex items-center gap-2">
-                📝 نظام التقارير الذكي 
-                <span class="text-moeGreen text-base bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">الإصدار الاحترافي (حفظ تلقائي 🟢)</span>
+                📝 نظام التقارير الذكي <span class="text-moeGreen text-base bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">الإصدار الاحترافي</span>
             </h2>
-            
             <div class="flex items-center gap-3 flex-wrap">
-                <!-- أزرار النسخ الاحتياطي والاستعادة -->
-                <button onclick="exportBackup()" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">
-                    📥 نسخ احتياطي
-                </button>
+                <button onclick="openApiModal()" class="bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">🔑 إعدادات النظام</button>
+                <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
+                <button onclick="exportBackup()" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">📥 نسخ احتياطي</button>
                 <label class="bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm cursor-pointer">
-                    📤 استعادة
-                    <input type="file" accept=".json" class="hidden" onchange="importBackup(event)">
+                    📤 استعادة <input type="file" accept=".json" class="hidden" onchange="importBackup(event)">
                 </label>
-
-                <button onclick="resetAllSettings()" class="bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">
-                    🔄 استعادة الافتراضيات
-                </button>
+                <button onclick="resetAllSettings()" class="bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">🔄 استعادة الافتراضيات</button>
                 <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
                 <label class="text-sm font-bold text-slate-600 font-cairo">القالب الأساسي:</label>
                 <select id="template-selector" onchange="switchTemplate()" class="border-2 border-moeGreen bg-emerald-50 text-moeDarkBlue rounded-lg px-3 py-1.5 text-sm font-bold outline-none cursor-pointer">
-                    <option value="default">الأساسي (كلاسيك)</option>
-                    <option value="teacher">المعلم (مطور)</option>
-                    <option value="ai-free">الذكاء الاصطناعي (حر)</option>
                     <option value="op-plan" selected>الخطة التشغيلية (هيئة التقويم)</option>
+                    <option value="ai-free">الذكاء الاصطناعي (حر)</option>
                 </select>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- العمود الأيمن -->
             <div class="lg:col-span-7 space-y-5">
                 
-                <!-- حاوية المعلومات العامة للتقارير (مخفية في الخطة) -->
-                <div id="general-info-block" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                <div id="general-info-block" class="hidden bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1 font-cairo">العنوان الرئيسي</label>
                         <input type="text" id="input-title" class="input-styled font-bold text-base text-moeDarkBlue" placeholder="مثال: ورشة عمل...">
@@ -309,40 +261,24 @@
                         <label class="block text-xs font-bold text-slate-500 mb-1 font-cairo">وصف البرنامج</label>
                         <textarea id="input-desc" class="input-styled text-sm h-16 bg-slate-50" placeholder="عن ماذا يتحدث التقرير..."></textarea>
                     </div>
-                    
-                    <div class="flex gap-2" id="suggest-ai-btns">
-                        <select id="suggest-count" class="input-styled w-1/3 text-xs font-bold text-slate-700 outline-none focus:border-moeYellow">
-                            <option value="2">عنوانين (2)</option>
-                            <option value="3" selected>3 عناوين (الأفضل)</option>
-                            <option value="4">4 عناوين (الأقصى)</option>
-                        </select>
-                        <button id="suggest-btn" onclick="suggestSubheadings()" class="flex-1 bg-moeYellow hover:bg-yellow-400 text-moeDarkBlue font-bold py-3 rounded-lg text-sm shadow-sm transition-all flex justify-center items-center gap-2">
-                            💡 اقترح العناوين يدوياً
-                        </button>
-                    </div>
                 </div>
 
-                <!-- إعدادات الذكاء الاصطناعي (الحر) -->
-                <div id="ai-struct-settings" class="bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-inner">
+                <div id="ai-struct-settings" class="hidden bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-inner">
                     <div class="flex justify-between items-center mb-3">
                         <label class="block text-xs font-bold text-slate-500 font-cairo">هيكل التقرير</label>
                     </div>
                     <div id="subheadings-container" class="space-y-4"></div>
-                    <button onclick="addSubheading()" class="w-full bg-white border-2 border-dashed border-slate-300 hover:border-moeGreen hover:text-moeGreen hover:bg-emerald-50 font-bold py-3 rounded-xl text-xs transition-all mt-4">
-                        + إضافة عنوان ومطالبة يدوياً
-                    </button>
+                    <button onclick="addSubheading()" class="w-full bg-white border-2 border-dashed border-slate-300 hover:border-moeGreen hover:text-moeGreen hover:bg-emerald-50 font-bold py-3 rounded-xl text-xs transition-all mt-4">+ إضافة عنوان ومطالبة يدوياً</button>
                 </div>
 
-                <!-- إعدادات الخطة التشغيلية (هيئة تقويم التعليم) -->
-                <div id="op-plan-settings-block" class="hidden bg-white p-5 rounded-xl border-2 border-moeDarkBlue shadow-lg space-y-4 relative overflow-hidden">
+                <div id="op-plan-settings-block" class="bg-white p-5 rounded-xl border-2 border-moeDarkBlue shadow-lg space-y-4 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-moeDarkBlue to-moeGreen"></div>
-                    
                     <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center gap-2">
                             <span class="text-moeGreen text-2xl">📋</span>
                             <div>
                                 <label class="block text-lg font-black text-moeDarkBlue font-cairo">مدخلات الخطة التشغيلية المدرسية</label>
-                                <p class="text-sm font-bold text-slate-600 mt-1">متوافقة تماماً مع معايير <strong class="text-moeGreen">هيئة تقويم التعليم والتدريب (تميز)</strong>.</p>
+                                <p class="text-sm font-bold text-slate-600 mt-1">متوافقة تماماً مع معايير <strong class="text-moeGreen">هيئة تقويم التعليم (تميز)</strong>.</p>
                             </div>
                         </div>
                     </div>
@@ -352,7 +288,6 @@
                             <input type="checkbox" id="toggle-op-header" checked onchange="renderReport()" class="w-4 h-4 accent-moeGreen rounded">
                             إظهار الترويسة والتذييل الرسمي <strong class="text-moeGreen">في جميع الصفحات</strong>
                         </label>
-                        <p class="text-xs font-bold text-slate-500 mt-1 mr-6">ستظهر الترويسة والتذييل في كافة الصفحات بما فيها الغلاف.</p>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200 mt-2">
@@ -366,50 +301,51 @@
                         </div>
                     </div>
 
-                    <!-- تحليل الفجوة التقويمية (تم التكبير والتنسيق البارز) -->
-                    <div class="bg-red-50 p-4 rounded-xl border-2 border-red-200 mt-3 shadow-sm">
+                    <div class="bg-red-50 p-4 rounded-xl border-2 border-red-200 mt-3 shadow-sm relative">
                         <label class="block text-xl font-black text-red-900 mb-2 font-cairo">📊 تحليل الفجوة التقويمية</label>
-                        <p class="text-base font-bold text-red-800 mb-4 bg-red-100 p-3 rounded-lg shadow-inner border border-red-200 leading-relaxed">بناءً على هذا التحليل، سيقوم الذكاء بتشخيص الواقع وبناء البرامج لسد الفجوة بذكاء.</p>
-                        
-                        <div class="grid grid-cols-3 gap-4 mb-5">
+                        <div class="grid grid-cols-3 gap-4 mb-3">
                             <div>
-                                <label class="block text-base font-black text-slate-800 mb-1">التقويم الخارجي (الهيئة) %</label>
-                                <input type="number" id="op-ext-score" class="input-styled text-2xl bg-white font-black text-moeDarkBlue text-center border-2 border-red-300 py-3" placeholder="75" oninput="calculateGap()">
+                                <label class="block text-sm font-black text-slate-800 mb-1">الخارجي (الهيئة) %</label>
+                                <input type="number" id="op-ext-score" class="input-styled text-xl bg-white font-black text-moeDarkBlue text-center border-2 border-red-300 py-2" placeholder="75" oninput="calculateGap()">
                             </div>
                             <div>
-                                <label class="block text-base font-black text-slate-800 mb-1">التقويم الذاتي (الداخلي) %</label>
-                                <input type="number" id="op-int-score" class="input-styled text-2xl bg-white font-black text-moeDarkBlue text-center border-2 border-red-300 py-3" placeholder="85" oninput="calculateGap()">
+                                <label class="block text-sm font-black text-slate-800 mb-1">الذاتي (الداخلي) %</label>
+                                <input type="number" id="op-int-score" class="input-styled text-xl bg-white font-black text-moeDarkBlue text-center border-2 border-red-300 py-2" placeholder="85" oninput="calculateGap()">
                             </div>
                             <div>
-                                <label class="block text-base font-black text-slate-800 mb-1">نسبة الفجوة %</label>
-                                <input type="text" id="op-gap-score" class="input-styled text-2xl bg-red-600 font-black text-white text-center border-2 border-red-700 py-3 shadow-inner" readonly placeholder="تلقائي">
+                                <label class="block text-sm font-black text-slate-800 mb-1">نسبة الفجوة %</label>
+                                <input type="text" id="op-gap-score" class="input-styled text-xl bg-red-600 font-black text-white text-center border-2 border-red-700 py-2 shadow-inner" readonly placeholder="تلقائي">
                             </div>
+                        </div>
+
+                        <!-- 🚀 New AI Suggestion Button -->
+                        <div class="mb-4">
+                            <button type="button" onclick="autoFillOpPlanInputs()" id="btn-autofill-op" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold py-2.5 px-4 rounded-lg shadow-md transition flex items-center justify-center gap-2 w-full border border-indigo-800">
+                                ✨ استنتاج وتعبئة الحقول تلقائياً بالذكاء الاصطناعي (بناءً على النسب)
+                            </button>
                         </div>
                         
                         <div>
-                            <label class="block text-lg font-black text-slate-900 mb-2">🧠 مسببات الفجوة (الأسباب الجذرية)</label>
-                            <textarea id="op-gap-causes" class="input-styled text-base font-bold h-24 bg-white border-slate-300 shadow-inner" placeholder="مثال: تباين في فهم المعايير، ضعف في توثيق الشواهد للمجال كذا، عدم تفعيل الشراكة..."></textarea>
+                            <label class="block text-sm font-black text-slate-900 mb-2">🧠 مسببات الفجوة (الأسباب الجذرية)</label>
+                            <textarea id="op-gap-causes" class="input-styled text-sm font-bold h-20 bg-white border-slate-300 shadow-inner" placeholder="يمكنك كتابتها يدوياً أو استخدام زر الاستنتاج الذكي أعلاه..."></textarea>
                         </div>
                     </div>
 
-                    <!-- مخرجات التقويم الذاتي (تم التكبير والتنسيق البارز) -->
-                    <div class="mt-5 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        <label class="block text-xl font-black text-moeDarkBlue mb-1">🎯 مخرجات التقويم الذاتي (نقاط القوة وفرص التحسين)</label>
-                        <p class="text-base font-bold text-blue-900 mb-3 bg-blue-100 p-2.5 rounded-lg border border-blue-300 shadow-inner">تُستخدم هذه المخرجات كنقطة انطلاق حقيقية لبناء الخطة ومعالجة الفجوات.</p>
-                        <textarea id="op-swot" class="input-styled text-base font-bold h-24 bg-white border-2 border-moeDarkBlue shadow-inner" placeholder="أدخل نقاط القوة لتعزيزها، وفرص التحسين (نقاط الضعف) لمعالجتها..."></textarea>
+                    <div class="mt-3 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        <label class="block text-lg font-black text-moeDarkBlue mb-2">🎯 مخرجات التقويم الذاتي (نقاط القوة وفرص التحسين)</label>
+                        <textarea id="op-swot" class="input-styled text-sm font-bold h-20 bg-white border-2 border-moeDarkBlue shadow-inner" placeholder="أدخل نقاط القوة لتعزيزها وفرص التحسين، أو استخدم التعبئة الذكية..."></textarea>
                     </div>
                     
-                    <div class="mt-5 p-4 bg-amber-50 rounded-xl border border-amber-200">
-                        <label class="block text-xl font-black text-slate-900 mb-1">تحديد الأولويات</label>
-                        <p class="text-base font-bold text-amber-900 mb-3 bg-amber-100 p-2.5 rounded-lg border border-amber-300 shadow-inner">ركز على المجالات التي حصلت على تقييم منخفض وتتطلب تدخلاً عاجلاً.</p>
-                        <textarea id="op-priorities" class="input-styled text-base font-bold h-20 bg-white border border-amber-300 shadow-inner" placeholder="مثال: التدريس يحتاج تطوير، نواتج التعلم منخفضة في الرياضيات..."></textarea>
+                    <div class="mt-3 p-4 bg-amber-50 rounded-xl border border-amber-200">
+                        <label class="block text-lg font-black text-slate-900 mb-2">تحديد الأولويات</label>
+                        <textarea id="op-priorities" class="input-styled text-sm font-bold h-16 bg-white border border-amber-300 shadow-inner" placeholder="مثال: التدريس يحتاج تطوير..."></textarea>
                     </div>
 
                     <div class="mt-4">
                         <label class="block text-sm font-bold text-slate-700 mb-2">أعضاء لجنة التميز للتقويم المدرسي</label>
                         <div class="flex gap-2 mb-2">
                             <input type="text" id="cm-name" placeholder="الاسم" class="input-styled text-sm w-1/3 bg-white">
-                            <input type="text" id="cm-role" placeholder="الصفة (مدير، وكيل...)" class="input-styled text-sm w-1/3 bg-white">
+                            <input type="text" id="cm-role" placeholder="الصفة" class="input-styled text-sm w-1/3 bg-white">
                             <input type="text" id="cm-task" placeholder="المهمة" class="input-styled text-sm w-1/3 bg-white" onkeydown="if(event.key === 'Enter') addCommitteeMember()">
                             <button onclick="addCommitteeMember()" class="bg-moeGreen text-white px-3 py-2 rounded-lg font-bold hover:bg-emerald-600 transition">+</button>
                         </div>
@@ -423,16 +359,13 @@
                     </div>
 
                     <div class="pt-3 border-t border-slate-200">
-                        <label class="block text-sm font-bold text-indigo-700 mb-2">💡 المحددات والتعليمات التي يلتزم بها الذكاء الاصطناعي لتوليد المحتوى (اختياري)</label>
-                        <textarea id="op-instructions" class="input-styled text-sm font-bold h-16 bg-indigo-50 border-indigo-200 text-indigo-900 shadow-inner" placeholder="في حال الإدخال، سيلتزم بها الذكاء الاصطناعي بصرامة مطلقة، وفي حال تركها فارغة سيتم تجاهلها. مثال: ركز البرامج على استراتيجيات الفهم القرائي..."></textarea>
+                        <label class="block text-sm font-bold text-indigo-700 mb-2">💡 محددات وتعليمات للمولد الذكي (اختياري)</label>
+                        <textarea id="op-instructions" class="input-styled text-sm font-bold h-16 bg-indigo-50 border-indigo-200 text-indigo-900 shadow-inner" placeholder="مثال: ركز البرامج على استراتيجيات الفهم القرائي..."></textarea>
                     </div>
                 </div>
             </div>
 
-            <!-- العمود الأيسر -->
             <div class="lg:col-span-5 space-y-5">
-                
-                <!-- البيانات الرسمية -->
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider font-cairo">البيانات الرسمية والباركود</h3>
@@ -444,21 +377,16 @@
                         <div class="col-span-2">
                             <input type="text" id="input-school-name" value="مدرسة سهيل بن عمرو الثانوية - الحشف" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm font-bold bg-white focus:border-moeGreen outline-none" oninput="syncInfo()">
                         </div>
-                        
-                        <!-- رفع شعار المدرسة (جديد) -->
                         <div class="col-span-2 border border-slate-200 rounded-lg p-3 bg-slate-50">
                             <label class="block text-xs font-bold text-slate-700 mb-2">شعار المدرسة (يظهر في الأغلفة إن وجد)</label>
                             <input type="file" id="input-school-logo" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-moeGreen file:text-white hover:file:bg-emerald-600 cursor-pointer">
                         </div>
-
                         <div><input type="text" id="input-date" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-center bg-slate-50 outline-none" oninput="syncInfo()"></div>
                         <div><input type="text" id="input-domain" value="عام" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-center bg-slate-50 outline-none" oninput="syncInfo()"></div>
                         <div><input type="text" id="input-location" value="داخل المدرسة" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-center bg-slate-50 outline-none" placeholder="المكان" oninput="syncInfo()"></div>
                         <div><input type="number" id="input-student-count" value="0" min="0" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-center bg-slate-50 outline-none" placeholder="المستفيدين" oninput="syncInfo()"></div>
-                        
                         <div><input type="text" id="input-executor" value="معد الخطة/التقرير" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-center bg-slate-50 outline-none font-bold" oninput="syncInfo()"></div>
                         <div><input type="text" id="input-director" value="فيصل العلياني" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm font-bold bg-slate-50 outline-none text-center" oninput="syncInfo()"></div>
-
                         <div class="col-span-2 flex gap-2 mt-2 pt-2 border-t border-slate-100">
                             <input type="text" id="input-qr-link" class="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white outline-none focus:border-moeGreen" placeholder="🔗 رابط QR Code (اختياري)" oninput="updateQR()">
                             <select id="qr-position" class="w-1/3 border border-slate-200 rounded-lg px-2 py-2 text-sm font-bold bg-slate-50 outline-none" onchange="updateQR()">
@@ -471,17 +399,13 @@
                     </div>
                 </div>
 
-                <!-- إعدادات التخطيط والخطوط -->
                 <div id="layout-settings-panel" class="bg-blue-50 border border-blue-200 p-5 rounded-xl space-y-4 shadow-sm relative">
                     <div id="ai-settings-block" class="mb-4 pb-4 border-b border-blue-200 space-y-3">
                         <label class="block text-xs font-bold text-blue-900 font-cairo">🤖 أسلوب التخطيط المفضل</label>
                         <select id="ai-layout-style" class="w-full bg-white border border-blue-300 rounded-lg p-2.5 text-sm font-bold outline-none focus:border-moeGreen text-blue-800 shadow-sm">
                             <option value="auto">✨ ابتكار حر (افتراضي ذكي)</option>
                             <option value="infographic">📊 أسلوب الإنفوجرافيك</option>
-                            <option value="classic">📑 تقرير كلاسيكي رسمي</option>
-                            <option value="grid">🔲 تخطيط شبكي</option>
                         </select>
-                        
                         <div class="grid grid-cols-2 gap-3 pt-2">
                             <div class="col-span-2">
                                 <label class="block text-sm font-bold text-blue-900 mb-1">🔠 نوع الخط (تطبيق ذكي)</label>
@@ -491,82 +415,36 @@
                                         <option value="font-cairo">كايرو (Cairo)</option>
                                         <option value="font-almarai">المراعي (Almarai)</option>
                                         <option value="font-amiri">أميري (Amiri - رسمي)</option>
-                                        <option value="font-changa">تشانجا (Changa - عريض)</option>
                                     </select>
-                                    <button onclick="applyGlobalFont()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg font-bold text-xs shadow-sm transition">تطبيق للكل</button>
+                                    <button onclick="applyGlobalFont()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg font-bold text-xs shadow-sm transition">تطبيق</button>
                                 </div>
                             </div>
                             <div class="col-span-2">
-                                <label class="block text-[10px] font-bold text-blue-900 mb-1">📏 حجم النص العام (للذكاء الاصطناعي)</label>
+                                <label class="block text-[10px] font-bold text-blue-900 mb-1">📏 حجم النص العام</label>
                                 <select id="ai-base-text-size" class="w-full bg-white border border-blue-300 rounded-lg p-2 text-xs font-bold outline-none focus:border-moeGreen text-blue-800">
                                     <option value="auto">✨ موازنة تلقائية</option>
                                     <option value="text-[10pt]">صغير (كثيف)</option>
                                     <option value="text-[11pt]">متوسط (قياسي)</option>
-                                    <option value="text-[12pt]">كبير (موجز)</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-xs font-bold text-blue-800 uppercase tracking-wider font-cairo flex items-center gap-2">⚙️ إعدادات الصور</h3>
-                        <label class="flex items-center gap-1 cursor-pointer text-[10px] font-bold bg-white px-2 py-1 rounded shadow-sm border border-slate-200 text-moeDarkBlue hover:bg-slate-50 transition">
-                            <input type="checkbox" id="toggle-evidence" checked onchange="applyLayoutSettings()" class="w-3 h-3 accent-moeGreen rounded"> إظهار الشواهد
-                        </label>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-700 mb-1">نمط ترتيب الصور</label>
-                            <select id="layout-grid-style" onchange="applyLayoutSettings()" class="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs font-bold outline-none focus:border-moeGreen">
-                                <option value="auto">توزيع تلقائي منتظم</option>
-                                <option value="1-wide">صورة واحدة عريضة بالكامل</option>
-                                <option value="2-grid">صورتين متجاورتين</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- إدارة الشواهد والصور -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider font-cairo">إدارة الشواهد والصور</h3>
-                        <span id="img-counter" class="text-xs font-bold text-moeGreen bg-emerald-50 px-2 py-1 rounded border border-emerald-100">0 صورة</span>
-                    </div>
-                    <div class="flex gap-3">
-                        <label class="flex-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold py-3 rounded-xl shadow-sm transition-all flex justify-center items-center gap-2 cursor-pointer text-sm">
-                            📁 رفع من الجهاز
-                            <input type="file" id="input-images" accept="image/*" multiple class="hidden">
-                        </label>
-                    </div>
-                    <div id="mini-gallery" class="mini-gallery"></div>
                 </div>
             </div>
         </div>
 
         <div class="flex gap-4 mt-8 pt-6 border-t border-slate-200 justify-end items-center relative">
-            
             <div id="history-controls" class="absolute right-0 flex items-center gap-2 hidden print-hidden">
                 <button onclick="prevGeneration()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg font-bold text-sm transition">◀ السابق</button>
                 <span id="history-counter" class="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-3 py-2 rounded-lg">1 / 1</span>
                 <button onclick="nextGeneration()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg font-bold text-sm transition">التالي ▶</button>
             </div>
-
-            <button id="generate-btn" class="bg-moeGreen hover:bg-emerald-600 text-white font-black py-4 px-10 rounded-xl shadow-xl transition-all flex justify-center items-center gap-2 text-lg transform hover:-translate-y-1">
-                ✨ توليد المحتوى
-            </button>
-            
-            <button id="btn-download-img" onclick="downloadAsImage()" class="bg-moeDarkBlue hover:bg-blue-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition flex items-center gap-2 text-base">
-                🖼️ حفظ كصورة
-            </button>
-
-            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2 text-base">
-                🖨️ طباعة / PDF
-            </button>
+            <button id="generate-btn" class="bg-moeGreen hover:bg-emerald-600 text-white font-black py-4 px-10 rounded-xl shadow-xl transition-all flex justify-center items-center gap-2 text-lg transform hover:-translate-y-1">✨ توليد المحتوى</button>
+            <button id="btn-download-img" onclick="downloadAsImage()" class="bg-moeDarkBlue hover:bg-blue-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition flex items-center gap-2 text-base">🖼️ حفظ كصورة</button>
+            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2 text-base">🖨️ طباعة</button>
         </div>
     </div>
 
-    <!-- ================= شريط التحكم بالتكبير (Zoom) ================= -->
     <div id="zoom-controls" class="print-hidden flex gap-2 bg-white px-4 py-2 rounded-full shadow-md border border-slate-200 mb-4 items-center z-40 relative transition-all">
         <span class="text-xs font-bold text-slate-500 font-cairo">🔍 معاينة الورقة:</span>
         <button onclick="changeZoom(-0.05)" class="bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center font-bold text-slate-700 transition">-</button>
@@ -576,13 +454,10 @@
         <button onclick="autoFitScale()" class="bg-emerald-50 text-moeGreen hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1">✨ احتواء تلقائي</button>
     </div>
 
-    <!-- ================= المعاينة ================= -->
     <div id="preview-wrapper">
         <div id="report-element" class="a4-page">
-            
             <div id="qr-top-right" class="qr-container"></div>
             <div id="qr-top-left" class="qr-container"></div>
-
             <div class="header-section">
                 <div class="header-content">
                     <div class="text-right w-[35%]"><p class="text-[12pt] font-bold font-cairo leading-tight">المملكة العربية السعودية</p><p class="text-[11pt] font-bold font-cairo mt-1">الإدارة العامة للتعليم بمنطقة عسير</p></div>
@@ -590,9 +465,7 @@
                     <div class="text-right w-[35%]"><p class="text-[14pt] font-black font-cairo leading-tight">وزارة التعليم</p><p id="display-school-name" class="text-[11pt] font-bold text-moeYellow font-cairo mt-1">مدرسة سهيل بن عمرو الثانوية - الحشف</p></div>
                 </div>
             </div>
-            
             <div class="w-full flex justify-center text-center header-dependent"><div class="title-badge" id="display-title">عنوان التقرير</div></div>
-            
             <div class="info-bar-wrapper" id="global-info-bar">
                 <div class="info-bar" id="main-info-bar">
                     <div class="info-item"><span class="info-label">التاريخ</span><span class="info-value" id="display-date"></span></div>
@@ -602,43 +475,23 @@
                 </div>
             </div>
 
-            <!-- الحاوية المرنة الصارمة للمحتوى -->
             <main class="main-content relative" id="main-content-box">
                 <div class="scale-wrapper" id="scale-wrapper">
                     
-                    <div id="default-layout-wrapper" class="hidden h-full w-full">
-                        <div class="layout-container" id="default-layout-container">
-                            <div class="text-col" id="default-text-col"><div id="default-content-area" class="flex flex-col gap-3"></div></div>
-                            <div class="evidence-col" id="default-evidence-col">
-                                <div class="default-evidence-header">شواهد التنفيذ</div>
-                                <div class="default-evidence-container" id="default-evidence-container"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="teacher-layout-wrapper" class="hidden h-full w-full">
-                        <div class="layout-container" id="teacher-layout-container">
-                            <div class="text-col" id="teacher-text-col"><div id="teacher-content-area" class="flex flex-col"></div></div>
-                            <div class="evidence-col" id="teacher-evidence-col">
-                                <div class="teacher-evidence-header">شواهد التنفيذ</div>
-                                <div class="teacher-evidence-container" id="teacher-evidence-container"></div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <!-- AI Free Layout Container -->
                     <div id="ai-layout-wrapper" class="hidden h-full w-full">
                         <div id="ai-content-area" class="w-full flex flex-col gap-2">
-                            <div class="flex items-center justify-center h-40 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-400 font-bold mt-10">
+                            <div class="flex items-center justify-center h-40 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-400 font-bold mt-10 w-full mx-auto">
                                 قم بملء البيانات واضغط على "توليد المحتوى" ليقوم الذكاء الاصطناعي ببناء التقرير كاملاً 🤖✨
                             </div>
                         </div>
                     </div>
 
-                    <!-- مساحة الخطة التشغيلية متعددة الصفحات -->
+                    <!-- Operational Plan Layout Container -->
                     <div id="op-plan-layout-wrapper" class="hidden w-full h-full flex-col gap-8">
                         <div id="op-plan-content-area" class="w-full flex flex-col gap-8">
                             <div class="flex items-center justify-center h-64 border-2 border-dashed border-moeGreen rounded-xl bg-emerald-50 text-moeGreen font-bold mt-10 text-lg text-center p-6">
-                                📋 الخطة التشغيلية (وفق معايير هيئة تقويم التعليم).<br>بناءً على أولويات التحسين وتحليل الفجوة، سيقوم الذكاء ببناء صفحات رسمية وجداول دقيقة.
+                                📋 الخطة التشغيلية (وفق معايير هيئة تقويم التعليم).<br>بناءً على أولويات التحسين وتحليل الفجوة، سيقوم الذكاء ببناء صفحات بتصميم إنفوجرافيك عصري.
                             </div>
                         </div>
                     </div>
@@ -646,7 +499,6 @@
                 </div>
             </main>
 
-            <!-- التوقيعات (تستخدم في القوالب الفردية فقط) -->
             <footer class="footer-section">
                 <div class="text-center flex-1">
                     <p class="text-[10pt] font-bold text-slate-400 mb-3 font-cairo">معد التقرير</p>
@@ -664,8 +516,7 @@
     </div>
 
     <script>
-        const apiKey = ""; // مفتاح Gemini
-        
+        let currentApiKey = localStorage.getItem('google_gemini_api_key') || "";
         let capturedImages = [];
         let currentReportData = { sections: [], html_content: '', pages: [] };
         let currentTemplate = 'op-plan'; 
@@ -675,7 +526,7 @@
         let currentTableCell = null;
         let committeeMembers = []; 
         let autoSaveTimer;
-        let schoolLogoBase64 = null; // تخزين شعار المدرسة
+        let schoolLogoBase64 = null; 
 
         window.onload = () => {
             adjustPreviewScale();
@@ -686,26 +537,233 @@
             document.getElementById('template-selector').value = currentTemplate;
             switchTemplate(); 
             syncInfo();
-            renderImagesUI(); 
             toggleInfoBar();
             updateQR();
             calculateGap();
 
-            // مستمع للحفظ التلقائي عند أي إدخال في لوحة التحكم
+            if (!currentApiKey) {
+                openApiModal();
+            }
+
             document.getElementById('control-panel').addEventListener('input', () => {
                 clearTimeout(autoSaveTimer);
                 autoSaveTimer = setTimeout(() => { saveSettings(true); }, 1500); 
             });
         };
 
-        function showToast(msg) {
+        function showToast(msg, type = 'normal') {
             const t = document.getElementById('toast');
             t.innerText = msg;
+            if(type === 'error') {
+                t.style.backgroundColor = '#dc2626'; // Red
+            } else if (type === 'warn') {
+                t.style.backgroundColor = '#d97706'; // Amber
+            } else {
+                t.style.backgroundColor = '#1a365d'; // Default Blue
+            }
             t.classList.add('toast-show');
-            setTimeout(() => t.classList.remove('toast-show'), 3000);
+            setTimeout(() => {
+                t.classList.remove('toast-show');
+                setTimeout(() => t.style.backgroundColor = '#1a365d', 300); // Reset color
+            }, 4000);
         }
 
-        // رفع وتخزين شعار المدرسة
+        function openApiModal() {
+            document.getElementById('input-api-key').value = currentApiKey;
+            document.getElementById('api-key-modal').classList.remove('hidden');
+        }
+
+        function closeApiModal() {
+            document.getElementById('api-key-modal').classList.add('hidden');
+        }
+
+        async function saveApiKey() {
+            const val = document.getElementById('input-api-key').value.trim();
+            if (!val) {
+                showToast('يرجى إدخال مفتاح صالح للمتابعة.', 'warn');
+                return;
+            }
+
+            const btn = document.getElementById('btn-save-api-key');
+            const statusDiv = document.getElementById('api-status-display');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '⏳ جاري الاختبار...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            statusDiv.classList.add('hidden');
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${val}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: "ping" }] }],
+                        generationConfig: { maxOutputTokens: 1 } 
+                    })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error?.message || `خطأ في الاتصال (${response.status})`);
+                }
+
+                currentApiKey = val;
+                localStorage.setItem('google_gemini_api_key', currentApiKey);
+                
+                statusDiv.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'border-red-200');
+                statusDiv.classList.add('bg-emerald-50', 'text-moeGreen', 'border-emerald-200');
+                statusDiv.innerHTML = `✔️ <strong>تم الاتصال بنجاح!</strong><br>النموذج: gemini-1.5-flash`;
+                
+                showToast('تم حفظ وتفعيل المفتاح بنجاح 🚀');
+                setTimeout(closeApiModal, 2000);
+
+            } catch (error) {
+                console.error("API Key Verification Error:", error);
+                statusDiv.classList.remove('hidden', 'bg-emerald-50', 'text-moeGreen', 'border-emerald-200');
+                statusDiv.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+                statusDiv.innerHTML = `❌ <strong>فشل التحقق:</strong><br>${error.message.includes('API key not valid') ? 'المفتاح غير صالح، تأكد من نسخه كاملاً.' : 'مشكلة في الشبكة، تحقق من اتصالك.'}`;
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+        }
+
+        async function fetchAI(prompt, systemInstruction, images = [], isJson = true) {
+            if (!currentApiKey) {
+                openApiModal();
+                throw new Error("لم يتم إدخال مفتاح API");
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${currentApiKey}`;
+            let parts = [{ text: prompt }];
+            
+            images.forEach(img => { 
+                try {
+                    const mimeType = img.split(';')[0].split(':')[1];
+                    const base64Data = img.split(',')[1];
+                    parts.push({ inlineData: { mimeType: mimeType, data: base64Data } });
+                } catch(e) {
+                    console.error("خطأ في معالجة بيانات الصورة", e);
+                }
+            });
+
+            const payload = { 
+                contents: [{ parts: parts }],
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                generationConfig: {}
+            };
+            if (isJson) payload.generationConfig.responseMimeType = "application/json";
+
+            // نظام الاستشفاء: إعادة المحاولة تدريجياً (Exponential Backoff)
+            const delays = [1000, 2500, 5000]; 
+            let lastErrorMsg = "حدث خطأ غير معروف";
+            
+            for (let i = 0; i <= delays.length; i++) {
+                try {
+                    const response = await fetch(url, { 
+                        method: 'POST', 
+                        headers: { 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify(payload) 
+                    });
+                    
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({}));
+                        const errMsg = errData.error?.message || response.statusText;
+                        
+                        if (response.status === 400 && errMsg.includes('API key not valid')) {
+                            localStorage.removeItem('google_gemini_api_key');
+                            currentApiKey = "";
+                            openApiModal();
+                            throw new Error("مفتاح API الموفر غير صالح، تم إيقاف الاتصال. يرجى إدخال مفتاح صحيح.");
+                        } 
+                        else if (response.status === 429) {
+                            throw new Error("تم تجاوز الحد المسموح للاستخدام المجاني من Google (Quota Exceeded).");
+                        }
+                        else if (response.status === 500 || response.status === 503) {
+                            throw new Error("خوادم الذكاء الاصطناعي (Google) تواجه ضغطاً حالياً.");
+                        }
+                        throw new Error(`خطأ (${response.status}): ${errMsg}`);
+                    }
+                    
+                    const data = await response.json();
+                    let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!text) throw new Error("تم الاتصال ولكن الاستجابة كانت فارغة.");
+
+                    if (isJson) {
+                        text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+                        return JSON.parse(text);
+                    }
+                    return text;
+
+                } catch (error) { 
+                    lastErrorMsg = error.message; 
+                    console.error(`[محاولة ${i+1}] فشل الاتصال:`, error);
+                    
+                    // توقف فوراً إذا كان الخطأ متعلق بصلاحية المفتاح
+                    if (error.message.includes("مفتاح API")) throw error;
+                    
+                    if (i < delays.length) {
+                        console.log(`جاري إعادة المحاولة بعد ${delays[i]} ملي ثانية...`);
+                        await new Promise(r => setTimeout(r, delays[i])); 
+                    }
+                }
+            }
+            throw new Error(`تعذر إكمال الطلب بعد عدة محاولات. السبب: ${lastErrorMsg}`);
+        }
+
+        async function autoFillOpPlanInputs() {
+            const ext = document.getElementById('op-ext-score').value;
+            const int = document.getElementById('op-int-score').value;
+            const gap = document.getElementById('op-gap-score').value;
+
+            if (!ext || !int) {
+                showToast('يرجى إدخال نسب التقويم الخارجي والداخلي أولاً ليتمكن الذكاء الاصطناعي من التحليل بدقة 📊', 'warn');
+                return;
+            }
+
+            const btn = document.getElementById('btn-autofill-op');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ جاري تحليل الفجوة واقتراح المحتوى... (يرجى الانتظار)';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-wait');
+
+            const sysPrompt = "أنت خبير تطوير جودة واعتماد مدرسي (هيئة تقويم التعليم). أجب بتنسيق JSON حصراً.";
+            const prompt = `بناءً على نتائج التقويم المدرسي التالية:
+            التقويم الخارجي: ${ext}%
+            التقويم الداخلي (الذاتي): ${int}%
+            حجم الفجوة: ${gap}
+
+            قم بتحليل هذه الأرقام واقترح محتوى احترافي، واقعي، وعالي الجودة للبنود التالية الخاصة بالخطة التشغيلية للمدرسة لسد هذه الفجوة:
+            1. مسببات الفجوة (الأسباب الجذرية).
+            2. مخرجات التقويم الذاتي (نقاط القوة وفرص التحسين).
+            3. أولويات التحسين (التركيز الأساسي).
+            4. صغ رؤية ورسالة طموحة للمدرسة تلائم المرحلة.
+
+            يجب أن يكون المخرج JSON فقط بهذا التنسيق:
+            { "causes": "...", "swot": "...", "priorities": "...", "vision": "..." }`;
+
+            try {
+                const res = await fetchAI(prompt, sysPrompt, [], true);
+                if (res) {
+                    document.getElementById('op-gap-causes').value = res.causes || '';
+                    document.getElementById('op-swot').value = res.swot || '';
+                    document.getElementById('op-priorities').value = res.priorities || '';
+                    document.getElementById('op-vision').value = res.vision || '';
+                    showToast('تم استنتاج البيانات بنجاح! يمكنك الآن مراجعتها وتعديلها ✨');
+                    saveSettings(true);
+                }
+            } catch (error) {
+                 showToast(error.message, 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-wait');
+            }
+        }
+
         document.getElementById('input-school-logo').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -713,66 +771,47 @@
                 reader.onload = (ev) => { 
                     schoolLogoBase64 = ev.target.result; 
                     saveSettings(true);
-                    if(currentTemplate === 'op-plan' && currentReportData.pages.length > 0) renderReport(); // تحديث فوري إذا كانت الخطة مولدة
+                    if(currentTemplate === 'op-plan' && currentReportData.pages.length > 0) renderReport(); 
                 };
                 reader.readAsDataURL(file);
-            } else {
-                schoolLogoBase64 = null;
-            }
+            } else { schoolLogoBase64 = null; }
         });
 
-        // حساب الفجوة آلياً
         function calculateGap() {
             const ext = parseFloat(document.getElementById('op-ext-score').value) || 0;
             const int = parseFloat(document.getElementById('op-int-score').value) || 0;
             const gapInput = document.getElementById('op-gap-score');
-            
-            if(ext > 0 && int > 0) {
-                const diff = Math.abs(int - ext).toFixed(1);
-                gapInput.value = diff + '%';
-            } else {
-                gapInput.value = '';
-            }
+            if(ext > 0 && int > 0) { gapInput.value = Math.abs(int - ext).toFixed(1) + '%'; } else { gapInput.value = ''; }
         }
 
-        // تطبيق الخط على مستوى المستند المعروض
         function applyGlobalFont() {
             const fontVal = document.getElementById('ai-font-family').value;
             const previewArea = document.getElementById('scale-wrapper');
-            // مسح كلاسات الخطوط السابقة
             const classesToRemove = ['font-tajawal', 'font-cairo', 'font-almarai', 'font-amiri', 'font-changa'];
             
-            // تطبيق على كل العناصر التي تحتوي على أي من هذه الكلاسات أو إعادة تعيين الأب
             previewArea.classList.remove(...classesToRemove);
             previewArea.classList.add(fontVal);
             
-            // تحديث العناصر الداخلية لتأكيد تطبيق الخط
             const elements = previewArea.querySelectorAll('*');
             elements.forEach(el => {
                 classesToRemove.forEach(cls => {
-                    if (el.classList.contains(cls)) {
-                        el.classList.remove(cls);
-                        el.classList.add(fontVal);
-                    }
+                    if (el.classList.contains(cls)) { el.classList.remove(cls); el.classList.add(fontVal); }
                 });
             });
-            showToast('تم تطبيق الخط بذكاء ✨');
+            showToast('تم تطبيق الخط بنجاح ✨');
         }
 
-        // النسخ الاحتياطي
         function exportBackup() {
-            saveSettings(true); // حفظ أحدث التعديلات قبل التصدير
+            saveSettings(true); 
             const dataStr = localStorage.getItem('smartReportSettings') || '{}';
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            const exportFileDefaultName = 'نسخة_احتياطية_الخطة_التشغيلية.json';
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.setAttribute('download', 'نسخة_احتياطية_النظام.json');
             linkElement.click();
             showToast('تم تصدير النسخة الاحتياطية بنجاح 📥');
         }
 
-        // الاستعادة
         function importBackup(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -780,13 +819,11 @@
             reader.onload = function(e) {
                 try {
                     const content = e.target.result;
-                    JSON.parse(content); // للتحقق من أنه JSON صالح
+                    JSON.parse(content); 
                     localStorage.setItem('smartReportSettings', content);
                     showToast('تمت استعادة البيانات! جاري تحديث الصفحة... 📤');
                     setTimeout(() => location.reload(), 1500);
-                } catch (err) {
-                    showToast('ملف النسخة الاحتياطية غير صالح ❌');
-                }
+                } catch (err) { showToast('ملف النسخة الاحتياطية غير صالح ❌', 'error'); }
             };
             reader.readAsText(file);
         }
@@ -800,38 +837,26 @@
             scaleWrapper.style.transform = 'none';
             
             const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ جاري الحفظ...';
-            btn.disabled = true;
+            btn.innerHTML = '⏳ جاري الحفظ...'; btn.disabled = true;
 
             await new Promise(r => setTimeout(r, 150));
 
             try {
                 const canvas = await html2canvas(report, {
                     scale: 2, 
-                    useCORS: true,
-                    logging: false,
+                    useCORS: true, logging: false,
                     backgroundColor: currentTemplate === 'op-plan' ? '#f1f5f9' : '#ffffff', 
-                    windowWidth: report.scrollWidth,
-                    windowHeight: report.scrollHeight,
-                    onclone: function(clonedDoc) {
-                        const clonedReport = clonedDoc.getElementById('report-element');
-                        clonedReport.style.transform = 'none'; 
-                    }
+                    windowWidth: report.scrollWidth, windowHeight: report.scrollHeight,
+                    onclone: function(clonedDoc) { clonedDoc.getElementById('report-element').style.transform = 'none'; }
                 });
                 
                 const link = document.createElement('a');
                 let fileName = document.getElementById('input-title').value.trim() || 'الوثيقة';
-                link.download = `وثيقة_${fileName}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                showToast('تم حفظ الملف كصورة احترافية بنجاح 🖼️');
-            } catch (error) {
-                console.error(error);
-                showToast('حدث خطأ أثناء معالجة الصورة');
-            } finally {
+                link.download = `وثيقة_${fileName}.png`; link.href = canvas.toDataURL('image/png'); link.click();
+                showToast('تم حفظ الملف كصورة بنجاح 🖼️');
+            } catch (error) { showToast('حدث خطأ أثناء معالجة الصورة', 'error'); } finally {
                 scaleWrapper.style.transform = oldTransform;
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+                btn.innerHTML = originalText; btn.disabled = false;
             }
         }
 
@@ -849,20 +874,13 @@
 
             if (!link) return;
 
-            let targetContainer = null;
-            let size = 64;
-
-            if (pos === 'footer' && currentTemplate !== 'op-plan') { 
-                targetContainer = document.getElementById('qr-footer-center'); 
-                targetContainer.style.display = 'inline-block'; 
-                size = 70; 
-            }
+            let targetContainer = null; let size = 64;
+            if (pos === 'footer' && currentTemplate !== 'op-plan') { targetContainer = document.getElementById('qr-footer-center'); targetContainer.style.display = 'inline-block'; size = 70; }
             else if (pos === 'top-right') { targetContainer = document.getElementById('qr-top-right'); targetContainer.style.display = 'block'; }
             else if (pos === 'top-left') { targetContainer = document.getElementById('qr-top-left'); targetContainer.style.display = 'block'; }
             else if (pos === 'ai-content') {
                 targetContainer = document.getElementById('ai-qr-slot');
-                if (targetContainer) size = 90;
-                else return;
+                if (targetContainer) size = 90; else return;
             }
 
             if (targetContainer) {
@@ -874,19 +892,17 @@
             const name = document.getElementById('cm-name').value.trim();
             const role = document.getElementById('cm-role').value.trim() || 'عضو';
             const task = document.getElementById('cm-task').value.trim() || 'المشاركة في التنفيذ';
-            if(!name) { showToast('يرجى إدخال اسم العضو على الأقل'); return; }
+            if(!name) { showToast('يرجى إدخال اسم العضو على الأقل', 'warn'); return; }
             
             committeeMembers.push({name, role, task});
             document.getElementById('cm-name').value = ''; document.getElementById('cm-role').value = ''; document.getElementById('cm-task').value = '';
             document.getElementById('cm-name').focus();
-            renderCommittee();
-            saveSettings(true);
+            renderCommittee(); saveSettings(true);
         }
 
         function removeCommitteeMember(index) {
             committeeMembers.splice(index, 1);
-            renderCommittee();
-            saveSettings(true);
+            renderCommittee(); saveSettings(true);
         }
 
         function renderCommittee() {
@@ -906,17 +922,17 @@
             const safeGet = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
             const settings = {
                 schoolName: safeGet('input-school-name'), director: safeGet('input-director'), domain: safeGet('input-domain'), location: safeGet('input-location'),
-                executor: safeGet('input-executor'), template: safeGet('template-selector'), aiStyle: safeGet('ai-layout-style'), gridStyle: safeGet('layout-grid-style'),
+                executor: safeGet('input-executor'), template: safeGet('template-selector'), aiStyle: safeGet('ai-layout-style'),
                 aiFont: safeGet('ai-font-family'), aiSize: safeGet('ai-base-text-size'),
                 committee: committeeMembers, priorities: safeGet('op-priorities'), swot: safeGet('op-swot'),
                 extScore: safeGet('op-ext-score'), intScore: safeGet('op-int-score'), gapCauses: safeGet('op-gap-causes'),
-                logo: schoolLogoBase64 // الحفظ بحذر
+                logo: schoolLogoBase64 
             };
             try {
                 localStorage.setItem('smartReportSettings', JSON.stringify(settings));
                 if(!silent) showToast('تم حفظ الإعدادات بنجاح 💾');
             } catch (e) {
-                if(!silent) showToast('تحذير: شعار المدرسة كبير جداً على التخزين المحلي، سيتم حفظ باقي الإعدادات.');
+                if(!silent) showToast('تحذير: مساحة التخزين ممتلئة (ربما بسبب حجم الشعار). سيتم التجاوز.', 'warn');
                 settings.logo = null;
                 localStorage.setItem('smartReportSettings', JSON.stringify(settings));
             }
@@ -929,7 +945,7 @@
                 const safeSet = (id, val) => { if(document.getElementById(id) && val) document.getElementById(id).value = val; };
                 safeSet('input-school-name', s.schoolName); safeSet('input-director', s.director); safeSet('input-domain', s.domain); safeSet('input-location', s.location); safeSet('input-executor', s.executor);
                 if(s.template) { currentTemplate = s.template; safeSet('template-selector', s.template); }
-                safeSet('ai-layout-style', s.aiStyle); safeSet('layout-grid-style', s.gridStyle); safeSet('ai-font-family', s.aiFont); safeSet('ai-base-text-size', s.aiSize);
+                safeSet('ai-layout-style', s.aiStyle); safeSet('ai-font-family', s.aiFont); safeSet('ai-base-text-size', s.aiSize);
                 safeSet('op-priorities', s.priorities); safeSet('op-swot', s.swot);
                 safeSet('op-ext-score', s.extScore); safeSet('op-int-score', s.intScore); safeSet('op-gap-causes', s.gapCauses);
                 if(s.committee && Array.isArray(s.committee)) { committeeMembers = s.committee; renderCommittee(); }
@@ -973,17 +989,16 @@
             toolbar.classList.remove('active');
         });
 
-        // دوال التحرير
-        function addTableRow() { if(!currentTableCell) return; const tr = currentTableCell.closest('tr'); if(!tr) return; const newTr = document.createElement('tr'); Array.from(tr.children).forEach(() => { const td = document.createElement('td'); td.className = "p-2 border-b border-slate-100 text-slate-700"; td.innerHTML = "..."; newTr.appendChild(td); }); tr.parentNode.insertBefore(newTr, tr.nextSibling); showToast('تمت إضافة صف'); }
+        function addTableRow() { if(!currentTableCell) return; const tr = currentTableCell.closest('tr'); if(!tr) return; const newTr = document.createElement('tr'); Array.from(tr.children).forEach(() => { const td = document.createElement('td'); td.className = "p-2 border-b border-slate-100 text-slate-700 bg-white"; td.innerHTML = "..."; newTr.appendChild(td); }); tr.parentNode.insertBefore(newTr, tr.nextSibling); showToast('تمت إضافة صف'); }
         function deleteTableRow() { if(!currentTableCell) return; const tr = currentTableCell.closest('tr'); if(tr && !tr.closest('thead')) { tr.remove(); toolbar.classList.remove('active'); showToast('تم الحذف'); } }
-        function addTableCol() { if(!currentTableCell) return; const tr = currentTableCell.closest('tr'); const index = Array.from(tr.children).indexOf(currentTableCell); const table = currentTableCell.closest('table'); if(!table) return; table.querySelectorAll('tr').forEach(row => { const isHeader = row.closest('thead') !== null; const cell = document.createElement(isHeader ? 'th' : 'td'); cell.className = isHeader ? "p-2 border-r border-slate-600" : "p-2 border-b border-slate-100 text-slate-700"; cell.innerHTML = isHeader ? "عنوان" : "..."; if (row.children.length > index + 1) row.insertBefore(cell, row.children[index + 1]); else row.appendChild(cell); }); showToast('تمت الإضافة'); }
+        function addTableCol() { if(!currentTableCell) return; const tr = currentTableCell.closest('tr'); const index = Array.from(tr.children).indexOf(currentTableCell); const table = currentTableCell.closest('table'); if(!table) return; table.querySelectorAll('tr').forEach(row => { const isHeader = row.closest('thead') !== null; const cell = document.createElement(isHeader ? 'th' : 'td'); cell.className = isHeader ? "p-2 border-r border-slate-600 bg-moeDarkBlue text-white" : "p-2 border-b border-slate-100 text-slate-700 bg-white"; cell.innerHTML = isHeader ? "عنوان" : "..."; if (row.children.length > index + 1) row.insertBefore(cell, row.children[index + 1]); else row.appendChild(cell); }); showToast('تمت الإضافة'); }
         function deleteTableCol() { if(!currentTableCell) return; const tr = currentTableCell.closest('tr'); const index = Array.from(tr.children).indexOf(currentTableCell); const table = currentTableCell.closest('table'); if(!table) return; table.querySelectorAll('tr').forEach(row => { if (row.children[index]) row.children[index].remove(); }); toolbar.classList.remove('active'); showToast('تم الحذف'); }
         function changeTableHeaderColor(color) { if(!currentTableCell) return; const table = currentTableCell.closest('table'); if(table) { const thead = table.querySelector('thead'); if(thead) { thead.className = thead.className.replace(/bg-[a-zA-Z0-9-]+/g, '').trim(); thead.style.backgroundColor = color; } } }
         function changeTableCellColor(color) { if(!currentTableCell) return; currentTableCell.className = currentTableCell.className.replace(/bg-[a-zA-Z0-9-]+/g, '').trim(); currentTableCell.style.backgroundColor = color; }
         
         function formatText(command, value = null) { document.execCommand(command, false, value); }
         function formatBlock(tag) { document.execCommand('formatBlock', false, `<${tag}>`); }
-        function resetFormatting() { document.execCommand('removeFormat', false, null); const sel = window.getSelection(); if(sel.rangeCount > 0) { let node = sel.getRangeAt(0).commonAncestorContainer; if(node.nodeType === 3) node = node.parentNode; while(node && node.getAttribute('contenteditable') !== 'true') { if(node.tagName === 'SPAN' && node.className.includes('text-[')) node.className = node.className.replace(/text-\[\d+pt\]/g, '').trim(); node.style.color = ''; node = node.parentNode; } } showToast('تم مسح التنسيق اليدوي'); }
+        function resetFormatting() { document.execCommand('removeFormat', false, null); const sel = window.getSelection(); if(sel.rangeCount > 0) { let node = sel.getRangeAt(0).commonAncestorContainer; if(node.nodeType === 3) node = node.parentNode; while(node && node.getAttribute('contenteditable') !== 'true') { if(node.tagName === 'SPAN' && node.className.includes('text-[')) node.className = node.className.replace(/text-\[\d+pt\]/g, '').trim(); node.style.color = ''; node = node.parentNode; } } showToast('تم مسح التنسيق'); }
         
         function applyColorToAllHeadings() {
             let currentColor = document.queryCommandValue('foreColor');
@@ -991,7 +1006,7 @@
             if (currentColor && currentColor !== 'rgb(0, 0, 0)') {
                 const aiArea = currentTemplate === 'op-plan' ? document.getElementById('op-plan-content-area') : document.getElementById('ai-content-area');
                 const headings = aiArea.querySelectorAll('h1, h2, h3, h4, h5, h6, .text-xl, .text-2xl, .text-lg');
-                headings.forEach(h => { h.style.color = currentColor; h.querySelectorAll('font, span').forEach(f => f.style.color = currentColor); }); showToast('تم التوحيد بنجاح ✨');
+                headings.forEach(h => { h.style.color = currentColor; h.querySelectorAll('font, span').forEach(f => f.style.color = currentColor); }); showToast('تم التوحيد ✨');
             }
         }
 
@@ -1027,12 +1042,22 @@
         function switchTemplate() {
             currentTemplate = document.getElementById('template-selector').value;
             
-            const defWrapper = document.getElementById('default-layout-wrapper'); const teacherWrapper = document.getElementById('teacher-layout-wrapper'); const aiWrapper = document.getElementById('ai-layout-wrapper'); const opPlanWrapper = document.getElementById('op-plan-layout-wrapper');
-            const generalInfo = document.getElementById('general-info-block'); const aiSettings = document.getElementById('ai-settings-block'); const aiStructSettings = document.getElementById('ai-struct-settings'); const opPlanSettings = document.getElementById('op-plan-settings-block');
+            const aiWrapper = document.getElementById('ai-layout-wrapper'); 
+            const opPlanWrapper = document.getElementById('op-plan-layout-wrapper');
+            const generalInfo = document.getElementById('general-info-block'); 
+            const aiSettings = document.getElementById('ai-settings-block'); 
+            const aiStructSettings = document.getElementById('ai-struct-settings'); 
+            const opPlanSettings = document.getElementById('op-plan-settings-block');
             const reportMainEle = document.getElementById('report-element');
+            const mainContentBox = document.getElementById('main-content-box');
 
-            defWrapper.classList.add('hidden'); teacherWrapper.classList.add('hidden'); aiWrapper.classList.add('hidden'); opPlanWrapper.classList.add('hidden');
+            aiWrapper.classList.add('hidden'); opPlanWrapper.classList.add('hidden');
             generalInfo.classList.remove('hidden'); aiSettings.classList.add('hidden'); aiStructSettings.classList.add('hidden'); opPlanSettings.classList.add('hidden');
+
+            if (currentTemplate === 'ai-free') {
+                mainContentBox.style.padding = '4mm 2mm'; 
+                mainContentBox.classList.add('overflow-y-auto');
+            }
 
             if (currentTemplate === 'op-plan') {
                 opPlanWrapper.classList.remove('hidden'); opPlanWrapper.classList.add('flex');
@@ -1040,66 +1065,25 @@
                 
                 reportMainEle.classList.remove('a4-page', 'bg-white'); reportMainEle.classList.add('bg-transparent', 'shadow-none', 'w-[210mm]');
                 document.querySelector('.header-section').style.display = 'none'; document.querySelector('.footer-section').style.display = 'none'; document.getElementById('global-info-bar').style.display = 'none'; document.querySelector('.header-dependent').style.display = 'none';
-                document.getElementById('main-content-box').classList.remove('main-content', 'overflow-y-auto'); document.getElementById('main-content-box').style.padding = '0';
+                mainContentBox.classList.remove('main-content', 'overflow-y-auto'); mainContentBox.style.padding = '0';
                 currentScale = 1.0; applyZoom();
             } else {
-                if (currentTemplate === 'default') defWrapper.classList.remove('hidden'); else if (currentTemplate === 'teacher') teacherWrapper.classList.remove('hidden'); else if (currentTemplate === 'ai-free') { aiWrapper.classList.remove('hidden'); aiSettings.classList.remove('hidden'); aiStructSettings.classList.remove('hidden'); }
+                if (currentTemplate === 'ai-free') { aiWrapper.classList.remove('hidden'); aiSettings.classList.remove('hidden'); aiStructSettings.classList.remove('hidden'); }
                 
                 reportMainEle.classList.add('a4-page', 'bg-white'); reportMainEle.classList.remove('bg-transparent', 'shadow-none', 'w-[210mm]');
                 document.querySelector('.header-section').style.display = ''; document.querySelector('.footer-section').style.display = ''; document.getElementById('global-info-bar').style.display = document.getElementById('toggle-info-bar').checked ? '' : 'none'; document.querySelector('.header-dependent').style.display = '';
-                document.getElementById('main-content-box').classList.add('main-content', 'overflow-y-auto'); document.getElementById('main-content-box').style.padding = '';
+                mainContentBox.classList.add('main-content');
             }
-            applyLayoutSettings(); renderReport(); renderImagesUI();
+            renderReport(); 
         }
 
         function toggleInfoBar() { if (currentTemplate !== 'op-plan') document.getElementById('global-info-bar').style.display = document.getElementById('toggle-info-bar').checked ? '' : 'none'; }
-
-        function applyLayoutSettings() {
-            if (currentTemplate === 'ai-free' || currentTemplate === 'op-plan') return; 
-            const showEv = document.getElementById('toggle-evidence').checked; const gridStyle = document.getElementById('layout-grid-style').value;
-            const layoutCont = currentTemplate === 'default' ? document.getElementById('default-layout-container') : document.getElementById('teacher-layout-container');
-            const textCol = currentTemplate === 'default' ? document.getElementById('default-text-col') : document.getElementById('teacher-text-col'); const evCol = currentTemplate === 'default' ? document.getElementById('default-evidence-col') : document.getElementById('teacher-evidence-col');
-
-            if (!showEv) { evCol.style.display = 'none'; textCol.style.width = '100%'; } 
-            else {
-                evCol.style.display = 'flex'; textCol.style.width = `50%`; evCol.style.width = `50%`; layoutCont.style.flexDirection = 'row';
-                if (currentTemplate === 'default') {
-                    const imgCount = capturedImages.length; const c = document.getElementById('default-evidence-container');
-                    if (gridStyle === 'auto') c.style.gridTemplateColumns = imgCount <= 1 ? '1fr' : (imgCount === 2 || imgCount === 4 ? '1fr 1fr' : '1fr 1fr 1fr');
-                    else if (gridStyle === '1-wide') c.style.gridTemplateColumns = '1fr'; else c.style.gridTemplateColumns = '1fr 1fr';
-                }
-            }
-        }
 
         function syncInfo() {
             const safeGet = (id, fallback) => { const el = document.getElementById(id); return el ? (el.value || fallback) : fallback; };
             document.getElementById('display-school-name').innerText = safeGet('input-school-name', '...'); document.getElementById('display-date').innerText = safeGet('input-date', ''); document.getElementById('display-domain').innerText = safeGet('input-domain', 'عام'); document.getElementById('display-location').innerText = safeGet('input-location', 'داخل المدرسة'); document.getElementById('display-student-count').innerText = safeGet('input-student-count', '0'); document.getElementById('display-footer-executor').innerText = safeGet('input-executor', '................'); document.getElementById('display-director').innerText = safeGet('input-director', 'فيصل العلياني');
         }
 
-        // ================= دوال الذكاء الاصطناعي وإعادة التوليد =================
-        async function fetchAI(prompt, systemInstruction, images = [], isJson = true) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            let parts = [{ text: prompt }];
-            images.forEach(img => { const [prefix, base64Data] = img.split(','); parts.push({ inlineData: { mimeType: prefix.match(/:(.*?);/)[1], data: base64Data } }); });
-            const payload = { contents: [{ role: "user", parts: parts }], systemInstruction: { parts: [{ text: systemInstruction }] } };
-            if (isJson) payload.generationConfig = { responseMimeType: "application/json" };
-
-            const delays = [1000, 2000, 4000, 8000, 16000];
-            let lastError;
-            for (let i = 0; i < 5; i++) {
-                try {
-                    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    if (!response.ok) throw new Error(`API Error ${response.status}: ${await response.text()}`);
-                    const data = await response.json();
-                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (!text) throw new Error("استجابة فارغة");
-                    return isJson ? JSON.parse(text) : text;
-                } catch (error) { lastError = error; if (i < 4) await new Promise(r => setTimeout(r, delays[i])); }
-            }
-            throw lastError;
-        }
-
-        // منطق إعادة توليد صفحة محددة (جديد)
         let targetRegenPageIndex = -1;
         function openRegenModal(index) {
             targetRegenPageIndex = index;
@@ -1122,7 +1106,6 @@
             if(styleOpt === 'text') styleInst = "كتابة النص بشكل سردي مقالي منظم وواضح بدون استخدام جداول.";
             else if(styleOpt === 'table') styleInst = "تنسيق المحتوى بالكامل في جدول إحصائي/تنظيمي دقيق ومضغوط.";
             else if(styleOpt === 'infographic') styleInst = "توزيع المحتوى على شكل بطاقات (إنفوجرافيك) ملونة وجذابة.";
-            else if(styleOpt === 'bullets') styleInst = "استخدام ترقيم جرافيكي ونقاط ملونة متسلسلة وبارزة.";
 
             const sysPrompt = `أنت مصمم واجهات ويب وخطط تشغيلية محترف. مهمتك "إعادة كتابة وتصميم" محتوى صفحة واحدة فقط من الخطة التشغيلية بناءً على المحتوى القديم.
 التعليمات الصارمة:
@@ -1130,8 +1113,8 @@
 2. استخدم هذا النمط/الشكل حصراً في التصميم: ${styleInst}
 3. حافظ على نفس الهوية البصرية: text-moeDarkBlue, text-moeGreen, bg-emerald-50, text-moeYellow.
 4. حافظ بصرامة تامة على الحاوية الأساسية للصفحة (الاحتواء وعدم التجاوز):
-   <div class="flex flex-col h-full justify-start gap-3 overflow-hidden border-0 p-0 w-full">...أدخل المحتوى هنا...</div>
-5. لا تقم بتغيير المعلومات الأساسية أو حذف بيانات هامة، فقط أعد صياغتها وتنسيقها بالنمط المطلوب المذكور أعلاه.`;
+   <div class="flex flex-col h-full justify-start gap-4 overflow-hidden border-0 p-0 w-full">...أدخل المحتوى هنا...</div>
+5. لا تقم بتغيير المعلومات الأساسية، فقط أعد صياغتها وتنسيقها بالنمط المطلوب.`;
 
             const prompt = `أعد تنسيق وصياغة محتوى هذه الصفحة بالنمط المطلوب.\n\nالمحتوى الحالي (للإشارة واستخراج المعلومات):\n${currentReportData.pages[targetRegenPageIndex]}`;
 
@@ -1143,11 +1126,8 @@
                     renderReport();
                     showToast('تم تحديث الصفحة بنجاح ✨');
                     closeRegenModal();
-                } else throw new Error("خطأ في المخرجات");
-            } catch(e) {
-                console.error(e);
-                showToast('حدث خطأ أثناء محاولة إعادة توليد الصفحة.');
-            } finally {
+                } else throw new Error("استجابة غير صحيحة من الذكاء الاصطناعي");
+            } catch(e) { showToast(e.message, 'error'); } finally {
                 btn.innerHTML = originalBtnHtml; btn.disabled = false;
             }
         }
@@ -1157,8 +1137,9 @@
             const desc = document.getElementById('input-desc').value;
             const schoolName = document.getElementById('input-school-name').value;
             
-            if (!title && currentTemplate !== 'op-plan') return alert('يرجى إدخال العنوان الرئيسي أولاً.');
-            if (!schoolName && currentTemplate === 'op-plan') return alert('يرجى إدخال اسم المدرسة في قسم البيانات الرسمية.');
+            if (!currentApiKey) { showToast('يرجى إعداد مفتاح API أولاً.', 'warn'); return openApiModal(); }
+            if (!title && currentTemplate !== 'op-plan') { showToast('يرجى إدخال العنوان الرئيسي أولاً.', 'warn'); return; }
+            if (!schoolName && currentTemplate === 'op-plan') { showToast('يرجى إدخال اسم المدرسة في قسم البيانات الرسمية.', 'warn'); return; }
             
             document.getElementById('display-title').innerText = title;
             syncInfo();
@@ -1169,121 +1150,98 @@
 
             const genBtn = document.getElementById('generate-btn');
             const originalGenHtml = genBtn.innerHTML;
-            genBtn.innerHTML = `جاري المعالجة...`; genBtn.disabled = true;
+            genBtn.innerHTML = `⏳ جاري معالجة وبناء المحتوى...`; genBtn.disabled = true;
             currentScale = 1.0; applyZoom();
 
             let sysPrompt = ""; let prompt = "";
 
             if (currentTemplate === 'op-plan') {
-                const priorities = document.getElementById('op-priorities').value || 'التركيز على نقاط الضعف المحددة ومعالجتها.';
+                const priorities = document.getElementById('op-priorities').value || 'التركيز على نقاط الضعف لمعالجتها.';
                 const vision = document.getElementById('op-vision').value;
                 const swot = document.getElementById('op-swot').value;
                 const yearHijri = document.getElementById('op-year-hijri').value || '١٤٤٧ هـ';
                 const yearGreg = document.getElementById('op-year-greg').value || '٢٠٢٥ م';
                 
                 const opInstValue = document.getElementById('op-instructions').value.trim();
-                const instructionsStr = opInstValue ? `تعليمات ومحددات مخصصة من المستخدم (يجب الالتزام بها بصرامة مطلقة أثناء توليد المحتوى): ${opInstValue}` : 'لا توجد تعليمات إضافية، اتبع المعايير الأساسية.';
+                const instructionsStr = opInstValue ? `تعليمات المستخدم الإلزامية: ${opInstValue}` : 'لا توجد تعليمات إضافية.';
 
                 let committeeText = committeeMembers.length > 0 
-                    ? `أعضاء لجنة التميز (استخدم هذه الأسماء المرفقة حصراً ولا تقم بإضافة أي عضو آخر أو أسماء وهمية من خيالك إطلاقاً): ${document.getElementById('op-committee').value}` 
-                    : `أعضاء لجنة التميز: لم يتم تحديد أعضاء يدوياً (تجاهل إضافة أي جدول للأعضاء ولا تقم باختراع أي أسماء من عندك أبداً).`;
+                    ? `أعضاء لجنة التميز (التزم بهذه الأسماء حصراً): ${document.getElementById('op-committee').value}` 
+                    : `أعضاء لجنة التميز: لم يتم تحديد أعضاء يدوياً (تجاهل إضافة جدول أعضاء).`;
                 
                 const extScore = document.getElementById('op-ext-score').value || 'غير محدد';
                 const intScore = document.getElementById('op-int-score').value || 'غير محدد';
                 const gapScore = document.getElementById('op-gap-score').value || 'غير محدد';
                 const gapCauses = document.getElementById('op-gap-causes').value || 'لم يتم تحديد مسببات للفجوة.';
                 
-                const showOpHeader = document.getElementById('toggle-op-header').checked;
                 const aiFont = document.getElementById('ai-font-family').value;
                 const aiTextSize = document.getElementById('ai-base-text-size').value;
                 
-                let fontInst = aiFont === 'auto' ? "استخدم font-cairo للعناوين و font-tajawal للنصوص." : `احتفظ بالخطوط الأساسية وسيقوم النظام بتطبيق الخط المختار بذكاء على الجميع.`;
-                let sizeInst = aiTextSize === 'auto' ? "وازن الأحجام لتكون الجداول مقروءة بوضوح." : `النص الأساسي '${aiTextSize}'.`;
+                let fontInst = aiFont === 'auto' ? "استخدم تنسيقات الخطوط الافتراضية." : `سيتم تطبيق الخط خارجياً، ركز على بناء الهيكل.`;
+                let sizeInst = aiTextSize === 'auto' ? "وازن أحجام الجداول بدقة." : `استخدم حجم النص الأساسي المختار.`;
 
-                sysPrompt = `أنت خبير جودة واعتماد مدرسي ومصمم واجهات ويب محترف.
-مهمتك: توليد "الخطة التشغيلية المدرسية" مقسمة بذكاء إلى "عدة صفحات حقيقية" متوافقة مع معايير هيئة تقويم التعليم والتدريب.
-
-التعليمات الهيكلية والتنسيقية الصارمة (إجباري جداً ومطابق لنمط الإنفوجرافيك الأنيق):
-1. المخرجات عبارة عن JSON يحتوي على مصفوفة "pages". كل عنصر هو كود HTML لصفحة مستقلة ومحصورة.
-2. هندسة الاحتواء الصارم (CRITICAL): يجب أن تكون كل صفحة محصورة تماماً كبطاقة إنفوجرافيك ولا تتجاوز أبداً مساحة الورقة A4 المتاحة. استبدل أي تخطيط عشوائي بهذا الهيكل الدقيق لكل صفحة (ما عدا الغلافين الأمامي والخلفي):
-   <div class="flex flex-col h-full justify-start gap-3 overflow-hidden border-0 p-0 w-full">
-      <div class="shrink-0"><h2 class="text-xl font-black text-moeDarkBlue border-b-2 border-moeYellow pb-1 inline-block">عنوان الصفحة هنا</h2></div>
-      <div class="flex-1 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3 overflow-hidden">
-         ... المحتوى المضغوط (جداول، نصوص) يوضع هنا وتأكد من عدم تجاوزه للارتفاع المتاح ...
+                sysPrompt = `أنت خبير جودة واعتماد مدرسي ومصمم واجهات (UI/UX) محترف جداً.
+مهمتك: توليد "الخطة التشغيلية المدرسية" مقسمة إلى صفحات منفصلة متوافقة مع معايير الهيئة، بأرقى تصميم عصري.
+التعليمات الهيكلية الصارمة:
+1. المخرجات JSON يحتوي على مصفوفة "pages" فقط. كل عنصر هو HTML لصفحة مستقلة.
+2. هندسة الاحتواء الجمالية (CRITICAL): كل صفحة هي لوحة محصورة تستخدم هذا الهيكل الراقي (عدا الأغلفة):
+   <div class="flex flex-col h-full justify-start gap-4 overflow-hidden border-0 p-0 w-full">
+      <div class="shrink-0 flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm">
+         <div class="w-2 h-8 rounded-full bg-moeYellow"></div>
+         <h2 class="text-xl font-black text-moeDarkBlue m-0">عنوان الصفحة</h2>
+      </div>
+      <div class="flex-1 bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col gap-4 overflow-hidden relative">
+         <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-moeDarkBlue to-moeGreen"></div>
+         ... ضع المحتوى (جداول راقية، نصوص) هنا ...
       </div>
    </div>
-3. الألوان (الهوية): استخدم text-moeDarkBlue, text-moeGreen, bg-emerald-50, text-moeYellow حصراً.
-4. الغلاف الأمامي والخلفي (توسيط وشعارات): يجب أن يكونا في المنتصف تماماً وخاليين من أي إطارات \`<div class="flex-1 flex flex-col justify-center items-center text-center w-full gap-5 border-0 p-0">\`
-   - في الغلاف الأمامي: ضع الرمز النصي [SCHOOL_LOGO_FRONT] فوق العنوان الرئيسي مباشرة لكي يحقن النظام الشعار إن وجد.
-   - في الغلاف الخلفي (الختامي): ضع الرمز النصي [LOGOS_BACK] في منتصف الصفحة لكي يحقن النظام الشعار الرسمي.
-   - الغلاف الأمامي يحتوي فقط على العنوان (\`text-4xl\`)، المدرسة، والعام. يُمنع وضع الرؤية والرسالة فيه.
-5. ترتيب المحتوى المستقل (صفحة مستقلة لكل بند إجبارياً):
-   - [0] الغلاف الأمامي.
-   - [1] الفهرس (جدول المحتويات).
-   - [2] الرؤية والرسالة.
-   - [3] تحليل الفجوة التقويمية ومسبباتها.
-   - [4] مخرجات التقويم الذاتي وتحديد الأولويات.
-   - [5] تشكيل لجنة التميز للتقويم المدرسي.
-   - [6] الأهداف العامة والتفصيلية.
-   - [7] المجال الأول: القيادة المدرسية (جدول البرامج).
-   - [8] المجال الثاني: التعليم والتعلم (جدول البرامج).
-   - [9] المجال الثالث: البيئة المدرسية (جدول البرامج).
-   - [10] المجال الرابع: نواتج التعلم (جدول البرامج).
-   - [11] آلية متابعة برامج الخطة والتقويم.
-   - [12] الغلاف الختامي.
-6. تصميم الجداول (الاحتواء وعدم التجاوز الإلزامي):
-   - جداول مضغوطة جداً: استخدم \`text-[9pt]\` أو \`text-[10pt]\` مع حشوة ضيقة \`p-1\` أو \`px-1.5 py-1\`.
-   - لخص واختصر البرامج بذكاء بحيث لا تتجاوز أبداً ارتفاع بطاقة الصفحة الواحدة لكل مجال.
-7. يُمنع نهائياً كتابة أرقام الصفحات داخل الكود المُولد، النظام سيضيفها في التذييل تلقائياً وبدون تكرار.
-8. ${fontInst} ${sizeInst}`;
+3. الألوان (الهوية): text-moeDarkBlue, text-moeGreen, bg-emerald-50, text-moeYellow حصراً.
+4. الغلاف الأمامي والخلفي: يجب أن يكونا فارغين من التنسيق المعقد وفي المنتصف تماماً.
+   - الأمامي: ضع [SCHOOL_LOGO_FRONT] فوق العنوان مباشرة.
+   - الخلفي: ضع [LOGOS_BACK] في المنتصف.
+5. تنسيق الجداول (أنماط حديثة):
+   - الترويسة: \`<thead class="bg-moeDarkBlue text-white text-[10pt] font-cairo">\`
+   - الخلايا: \`<td class="p-2 border-b border-slate-100 text-[9pt] text-slate-700 bg-white">\`
+   - لخص المحتوى بذكاء لكي لا يتجاوز ارتفاع الصفحة.
+6. ترتيب المحتوى (صفحة مستقلة لكل بند): [0] غلاف، [1] الفهرس، [2] الرؤية والرسالة، [3] الفجوة ومسبباتها، [4] مخرجات التقويم والأولويات، [5] لجنة التميز، [6] الأهداف، [7] المجال الأول، [8] المجال الثاني، [9] المجال الثالث، [10] المجال الرابع، [11] آلية المتابعة، [12] غلاف ختامي.
+7. لا تضع أرقام صفحات. ${fontInst} ${sizeInst}`;
 
                 prompt = `المدرسة: ${schoolName}\nالعام: ${yearHijri}/${yearGreg}
-تحليل الفجوة التقويمية: نسبة التقويم الخارجي للهيئة (${extScore}%)، نسبة التقويم الداخلي الذاتي (${intScore}%)، الفجوة (${gapScore}).
-مسببات الفجوة والأسباب الجذرية: ${gapCauses}
-مخرجات التقويم الذاتي (نقاط القوة والضعف): ${swot}
-الأولويات: ${priorities}\nالرؤية والرسالة: ${vision}
+تحليل الفجوة التقويمية: الخارجي (${extScore}%)، الداخلي (${intScore}%)، الفجوة (${gapScore}).
+مسببات الفجوة: ${gapCauses}\nمخرجات التقويم الذاتي: ${swot}\nالأولويات: ${priorities}\nالرؤية والرسالة: ${vision}
 ${committeeText}\n\n${instructionsStr}`;
 
             } else if (currentTemplate === 'ai-free') {
-                const aiStyle = document.getElementById('ai-layout-style').value;
                 const aiFont = document.getElementById('ai-font-family').value;
-                const aiTextSize = document.getElementById('ai-base-text-size').value;
-                const showEv = document.getElementById('toggle-evidence').checked;
+                let fontInst = aiFont === 'auto' ? "اختر الخط الأنسب" : `تجاهل تحديد الخط في الكود المولد.`;
                 
-                let fontInst = aiFont === 'auto' ? "اختر الخط الأنسب" : `استخدم الخط '${aiFont}'`;
-                sysPrompt = `أنت مصمم تقارير. أنشئ تقرير بصفحة واحدة (HTML فقط) محصور تماماً داخل <div class="flex flex-col h-full justify-between gap-2 overflow-hidden">. 
+                sysPrompt = `أنت مصمم تقارير إنفوجرافيك محترف. أنشئ تقرير بصفحة واحدة (HTML فقط) محصور تماماً ويستغل كامل العرض المتاح (w-full).
+الحاوية الأساسية الإلزامية: <div class="flex flex-col h-full justify-start gap-4 overflow-hidden w-full">
+تأكد من أن جميع البطاقات والجداول تمتد من اليمين لليسار.
 الهوية: ألوان text-moeDarkBlue, text-moeGreen.
-${fontInst}.
-كل عنوان فرعي ضعه في حاوية <div data-section-title="عنوان">. 
-الجداول باید أن تكون مطابقة للهوية (ترويسة bg-moeDarkBlue).
+ضع كل عنوان فرعي في حاوية <div data-section-title="عنوان"> مصممة كبطاقة.
+الجداول احترافية (ترويسة bg-moeDarkBlue).
 المخرجات JSON: { "html_content": "...", "generated_subheadings": [{"title":"...","hint":"..."}] }`;
-                prompt = `الوصف: "${desc}". الصور: ${capturedImages.length}. المحاور: ${JSON.stringify(subs)}`;
-            } else {
-                sysPrompt = `المخرجات JSON: { "sections": [ {"title": "العنوان", "content": "..."} ] }`;
-                prompt = `العنوان: ${title}\nالمحاور: ${JSON.stringify(subs)}`;
+                prompt = `الوصف: "${desc}". المحاور المطلوبة: ${JSON.stringify(subs)}`;
             }
 
             try {
                 if (currentTemplate === 'op-plan') {
-                    const result = await fetchAI(prompt, sysPrompt, capturedImages, true);
+                    const result = await fetchAI(prompt, sysPrompt, [], true);
                     currentReportData.pages = result.pages; 
                 } else if (currentTemplate === 'ai-free') {
-                    const result = await fetchAI(prompt, sysPrompt, capturedImages, true);
+                    const result = await fetchAI(prompt, sysPrompt, [], true);
                     currentReportData.html_content = result.html_content;
                     if (subs.length === 0 && result.generated_subheadings) {
                         document.getElementById('subheadings-container').innerHTML = '';
                         result.generated_subheadings.forEach(s => addSubheading(s.title, s.hint));
                     }
-                } else {
-                    const result = await fetchAI(prompt, sysPrompt, [], true);
-                    currentReportData.sections = result.sections.slice(0, 5);
                 }
                 
                 saveToHistory(currentReportData); renderReport();
-                setTimeout(() => { updateQR(); autoFitScale(); applyGlobalFont(); }, 300); 
+                setTimeout(() => { updateQR(); autoFitScale(); applyGlobalFont(); showToast('تم بناء التقرير بنجاح 🎉'); }, 300); 
             } catch(e) { 
-                console.error(e);
-                showToast('حدث خطأ أثناء التوليد'); 
+                showToast(e.message, 'error');
             } finally { 
                 genBtn.innerHTML = originalGenHtml; genBtn.disabled = false; 
             }
@@ -1300,14 +1258,10 @@ ${fontInst}.
             
             if (currentTemplate === 'op-plan' && currentReportData.pages && currentReportData.pages.length > 0) {
                 const showOpHeader = document.getElementById('toggle-op-header').checked;
-                const totalPages = currentReportData.pages.length;
                 let multiPageHtml = '';
 
                 currentReportData.pages.forEach((pageContent, idx) => {
-                    const pageNum = idx + 1;
-                    
-                    let headerHtml = '';
-                    let footerHtml = '';
+                    let headerHtml = ''; let footerHtml = '';
                     
                     if (showOpHeader) {
                         headerHtml = `
@@ -1320,28 +1274,15 @@ ${fontInst}.
                         </div>`;
                     }
 
-                    // الترقيم يبدأ بعد صفحة جدول المحتويات (الغلاف 0، الفهرس 1)
-                    let pageNumberDisplay = '';
-                    if (idx > 1 && idx < currentReportData.pages.length - 1) { 
-                        pageNumberDisplay = `<span class="text-base font-black text-moeDarkBlue px-3 py-1 font-cairo">${idx - 1}</span>`;
-                    }
+                    let pageNumberDisplay = (idx > 1 && idx < currentReportData.pages.length - 1) ? `<span class="text-base font-black text-moeDarkBlue px-3 py-1 font-cairo">${idx - 1}</span>` : '';
 
                     footerHtml = `
                     <footer class="footer-section shrink-0 border-t border-slate-200 bg-white" style="position:relative; z-index:10;">
-                        <div class="text-center flex-1">
-                            <p class="text-[10pt] font-bold text-slate-400 mb-3 font-cairo">معد الخطة</p>
-                            <p class="font-bold text-moeDarkBlue">${document.getElementById('input-executor').value}</p>
-                        </div>
-                        <div class="text-center flex-1 flex flex-col justify-center items-center">
-                            ${pageNumberDisplay}
-                        </div>
-                        <div class="text-center flex-1">
-                            <p class="text-[10pt] font-bold text-slate-400 mb-3 font-cairo">مدير المدرسة</p>
-                            <p class="font-bold text-moeGreen">${document.getElementById('input-director').value}</p>
-                        </div>
+                        <div class="text-center flex-1"><p class="text-[10pt] font-bold text-slate-400 mb-3 font-cairo">معد الخطة</p><p class="font-bold text-moeDarkBlue">${document.getElementById('input-executor').value}</p></div>
+                        <div class="text-center flex-1 flex flex-col justify-center items-center">${pageNumberDisplay}</div>
+                        <div class="text-center flex-1"><p class="text-[10pt] font-bold text-slate-400 mb-3 font-cairo">مدير المدرسة</p><p class="font-bold text-moeGreen">${document.getElementById('input-director').value}</p></div>
                     </footer>`;
 
-                    // حقن الشعارات (بدل الرموز النصية)
                     let processedContent = pageContent;
                     let frontLogoHtml = schoolLogoBase64 ? `<img src="${schoolLogoBase64}" class="h-32 object-contain mx-auto mb-6" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">` : '';
                     let backLogosHtml = `<div class="flex justify-center items-center gap-10 my-8">
@@ -1352,39 +1293,19 @@ ${fontInst}.
                     processedContent = processedContent.replace(/\[SCHOOL_LOGO_FRONT\]/g, frontLogoHtml);
                     processedContent = processedContent.replace(/\[LOGOS_BACK\]/g, backLogosHtml);
 
-                    // بناء الصفحة مع زر إعادة التوليد
                     multiPageHtml += `
                     <div class="sub-page-a4 relative">
-                        <!-- زر إعادة التوليد للصفحة الحالية (مخفي عند الطباعة) -->
-                        <button onclick="openRegenModal(${idx})" class="print-hidden absolute top-4 left-4 bg-white border border-slate-200 text-moeDarkBlue hover:bg-emerald-50 hover:text-moeGreen hover:border-moeGreen px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition flex items-center gap-1 z-[60]">
-                            🔄 تعديل وتوليد هذه الصفحة
-                        </button>
-                        
+                        <button onclick="openRegenModal(${idx})" class="print-hidden absolute top-4 left-4 bg-white border border-slate-200 text-moeDarkBlue hover:bg-emerald-50 hover:text-moeGreen hover:border-moeGreen px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition flex items-center gap-1 z-[60]">🔄 تعديل هذه الصفحة</button>
                         ${headerHtml}
-                        <main class="flex-1 px-[10mm] py-[6mm] overflow-hidden relative flex flex-col" contenteditable="true" onblur="updatePageContent(${idx}, this.innerHTML)">
-                            ${processedContent}
-                        </main>
+                        <main class="flex-1 px-[8mm] py-[8mm] overflow-hidden relative flex flex-col" contenteditable="true" onblur="updatePageContent(${idx}, this.innerHTML)">${processedContent}</main>
                         ${footerHtml}
                     </div>`;
                 });
 
                 opPlanContainer.innerHTML = multiPageHtml;
             } 
-            else if (currentTemplate !== 'op-plan') {
-                if (currentReportData.sections && currentReportData.sections.length > 0) {
-                    let dHtml = ''; let tHtml = '';
-                    currentReportData.sections.forEach((sec) => {
-                        dHtml += `<div class="t-box"><h3 class="box-title mb-2 text-[14pt]">${sec.title}</h3><div class="box-text text-[12pt]">${sec.content}</div></div>`;
-                        tHtml += `<div class="content-card"><h3 class="section-heading text-[14pt]">${sec.title}</h3><div class="teacher-text text-[12pt]">${sec.content}</div></div>`;
-                    });
-                    document.getElementById('default-content-area').innerHTML = dHtml; 
-                    document.getElementById('teacher-content-area').innerHTML = tHtml;
-                }
-
-                if (currentTemplate === 'ai-free' && currentReportData.html_content) {
-                    let finalAiHtml = currentReportData.html_content.replace(/IMG_(\d+)/g, (match, p1) => { return capturedImages[parseInt(p1)] || ''; });
-                    document.getElementById('ai-content-area').innerHTML = `<div contenteditable="true" class="w-full h-full flex flex-col outline-none p-2" onblur="currentReportData.html_content=this.innerHTML">${finalAiHtml}</div>`;
-                }
+            else if (currentTemplate === 'ai-free' && currentReportData.html_content) {
+                document.getElementById('ai-content-area').innerHTML = `<div contenteditable="true" class="w-full h-full flex flex-col outline-none" onblur="currentReportData.html_content=this.innerHTML">${currentReportData.html_content}</div>`;
             }
         }
 
@@ -1400,7 +1321,6 @@ ${fontInst}.
                         <option value="auto" ${style==='auto'?'selected':''}>🤖 بناء تلقائي</option>
                         <option value="table" ${style==='table'?'selected':''}>📊 جدول إحصائي</option>
                         <option value="infographic" ${style==='infographic'?'selected':''}>🗂️ بطاقات (إنفوجرافيك)</option>
-                        <option value="text" ${style==='text'?'selected':''}>📝 نص عادي</option>
                     </select>
                 </div>`;
             document.getElementById('subheadings-container').appendChild(div);
@@ -1412,42 +1332,9 @@ ${fontInst}.
             if (titleValue && currentTemplate === 'ai-free') {
                 const aiArea = document.getElementById('ai-content-area');
                 const sec = aiArea.querySelector(`[data-section-title="${titleValue}"]`);
-                if (sec) { sec.remove(); currentReportData.html_content = aiArea.querySelector('[contenteditable="true"]').innerHTML; showToast('تم الحذف لحظياً 🗑️'); autoFitScale(); }
+                if (sec) { sec.remove(); currentReportData.html_content = aiArea.querySelector('[contenteditable="true"]').innerHTML; showToast('تم الحذف 🗑️'); autoFitScale(); }
             }
             el.remove();
-        }
-
-        async function suggestSubheadings() {
-            const title = document.getElementById('input-title').value; if (!title) return alert('أدخل العنوان الرئيسي أولاً.');
-            const count = parseInt(document.getElementById('suggest-count').value) || 3;
-            const btn = document.getElementById('suggest-btn'); const originalHtml = btn.innerHTML;
-            btn.innerHTML = '⏳ جاري الاقتراح...'; btn.disabled = true;
-            try {
-                const res = await fetchAI(`العنوان: ${title}\nالعدد: ${count}`, `المخرجات JSON: { "suggestions": [{"title": "...", "hint": "..."}] }`, [], true);
-                if (res && res.suggestions) { document.getElementById('subheadings-container').innerHTML = ''; res.suggestions.slice(0, count).forEach(s => addSubheading(s.title, s.hint)); }
-            } catch(e) { showToast('تعذر الاقتراح'); } finally { btn.innerHTML = originalHtml; btn.disabled = false; }
-        }
-
-        document.getElementById('input-images').addEventListener('change', function(e) {
-            Array.from(e.target.files).forEach(file => { const reader = new FileReader(); reader.onload = (ev) => { capturedImages.push(ev.target.result); renderImagesUI(); }; reader.readAsDataURL(file); }); this.value = '';
-        });
-        function deleteImage(index) { capturedImages.splice(index, 1); renderImagesUI(); }
-
-        function renderImagesUI() {
-            if (currentTemplate !== 'ai-free' && currentTemplate !== 'op-plan') {
-                const gridStyle = document.getElementById('layout-grid-style').value;
-                let defaultHtml = ''; let teacherHtml = '';
-                capturedImages.forEach((src, idx) => {
-                    let extraClass = ((gridStyle === '1-top-grid' && idx === 0) || gridStyle === '1-wide') ? 'span-2-cols' : '';
-                    defaultHtml += `<div class="evidence-photo-wrapper ${extraClass}"><img src="${src}" class="evidence-photo"></div>`;
-                    teacherHtml += `<div class="teacher-photo-slot"><img src="${src}"></div>`;
-                });
-                document.getElementById('default-evidence-container').innerHTML = defaultHtml || `<div class="evidence-photo-wrapper bg-slate-50 border-2 border-dashed border-slate-200"></div>`;
-                document.getElementById('teacher-evidence-container').innerHTML = teacherHtml || `<div class="teacher-photo-slot"></div>`;
-            }
-            document.getElementById('mini-gallery').innerHTML = capturedImages.map((src, idx) => `<div class="mini-thumb-wrapper"><img src="${src}" class="mini-thumb"><div class="del-thumb" onclick="deleteImage(${idx})">✖</div></div>`).join('');
-            document.getElementById('img-counter').innerText = `${capturedImages.length} صورة`;
-            applyLayoutSettings();
         }
 
         function adjustPreviewScale() { const report = document.getElementById('report-element'); const scale = Math.min(1, (window.innerWidth - 40) / 794); report.style.transform = window.innerWidth < 850 ? `scale(${scale})` : 'scale(1)'; }
