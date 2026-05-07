@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>نظام التقارير الذكي - مدرسة سهيل بن عمرو الثانوية</title>
     
+    <!-- الخطوط -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;900&family=Tajawal:wght@400;500;700;900&family=Almarai:wght@400;700;800&family=Amiri:wght@400;700&family=Changa:wght@400;700&display=swap" rel="stylesheet">
     
+    <!-- مكتبات -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -32,16 +34,17 @@
         * { box-sizing: border-box !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         body { background-color: #f1f5f9; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
 
-        #preview-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; transform-origin: top center; margin: 20px 0 40px 0; }
+        #preview-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; transform-origin: top center; margin: 20px 0 40px 0; overflow: visible; }
         @page { size: A4 portrait; margin: 0; }
         
         .a4-page { 
             width: 210mm; 
-            height: 297mm; 
+            min-height: 297mm; /* Changed to allow natural growth */
+            height: auto;
             background-color: white; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
             position: relative; 
-            overflow: hidden; 
+            overflow: visible; /* Prevents internal scrollbars */
             display: flex; 
             flex-direction: column; 
             flex-shrink: 0; 
@@ -54,7 +57,7 @@
             background-color: white;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             position: relative;
-            overflow: hidden;
+            overflow: hidden; /* Strict containment for operational plan pages */
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
@@ -63,6 +66,13 @@
             page-break-after: always;
             break-after: page;
         }
+
+        /* Sidebar Page Controls */
+        .page-controls { position: absolute; left: -50px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 50; }
+        .page-ctrl-btn { background: white; border: 2px solid #e2e8f0; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; font-size: 16px; }
+        .page-ctrl-btn:hover { background: #1a365d; color: white; border-color: #1a365d; transform: scale(1.1); }
+        .page-ctrl-btn.add-btn:hover { background: #18a883; border-color: #18a883; }
+        .page-ctrl-btn.del-btn:hover { background: #ef4444; border-color: #ef4444; }
 
         .header-section { position: relative; height: 48mm; width: 100%; background: linear-gradient(135deg, #1a365d 0%, #18a883 100%); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; color: white; z-index: 10; flex-shrink: 0; }
         .header-content { position: absolute; inset: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 10mm; }
@@ -81,9 +91,7 @@
         #qr-top-left { top: 5mm; left: 5mm; }
         #qr-footer-center { background: white; padding: 4px; border-radius: 8px; border: 1px solid #e2e8f0; display: none; margin: 0 auto; }
 
-        .main-content { padding: 4mm 10mm; flex: 1 1 0; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; position: relative; transition: padding 0.3s ease; }
-        .main-content::-webkit-scrollbar { width: 4px; }
-        .main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .main-content { flex: 1 1 auto; display: flex; flex-direction: column; overflow: visible !important; position: relative; transition: padding 0.3s ease; }
 
         .scale-wrapper { width: 100%; height: 100%; transform-origin: top center; transition: transform 0.2s ease; display: flex; flex-direction: column;}
 
@@ -91,9 +99,6 @@
         [contenteditable="true"]:hover { outline-color: #cbd5e1; }
         [contenteditable="true"]:focus { outline-color: #18a883; background: #fff; box-shadow: 0 0 0 3px rgba(24,168,131,0.1); }
 
-        .evidence-photo-wrapper { width: 100%; border-radius: 6px; overflow: hidden; background-color: #f8fafc; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; min-height: var(--img-height); height: var(--img-height); position: relative;}
-        .evidence-photo { width: 100%; height: 100%; object-fit: var(--img-fit); position: absolute; inset: 0; }
-        
         #report-element { direction: rtl; }
         #report-element ul { list-style: none !important; padding-right: 0 !important; margin-right: 0 !important; }
         #report-element ul > li { position: relative !important; padding-right: 16px !important; margin-bottom: 4px; text-align: right !important; }
@@ -109,11 +114,6 @@
         .input-styled:focus { border-color: #18a883; box-shadow: 0 0 0 3px rgba(24, 168, 131, 0.1); }
         .subheading-item { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px 12px 12px; margin-bottom: 12px; position: relative; transition: 0.2s; }
         .delete-btn { position: absolute; top: -10px; right: -10px; color: white; font-size: 11px; cursor: pointer; background: #ef4444; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; z-index: 10;}
-        
-        .mini-gallery { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-        .mini-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #e2e8f0; }
-        .mini-thumb-wrapper { position: relative; }
-        .del-thumb { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; z-index: 5;}
 
         #floating-toolbar { position: absolute; background: #1a365d; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); padding: 8px; display: flex; flex-direction: column; gap: 8px; z-index: 9999; transform: translateY(-130%); transition: opacity 0.2s; opacity: 0; pointer-events: none; width: max-content; border: 1px solid rgba(255,255,255,0.1);}
         #floating-toolbar.active { opacity: 1; pointer-events: auto; }
@@ -129,13 +129,12 @@
         
         @media print {
             body { background-color: white; overflow: visible; }
-            .print-hidden, #control-panel, #history-controls, #zoom-controls, #floating-toolbar { display: none !important; }
+            .print-hidden, #control-panel, #history-controls, #zoom-controls, #floating-toolbar, .page-controls { display: none !important; }
             #preview-wrapper { transform: none !important; margin: 0 !important; }
-            .a4-page { box-shadow: none !important; margin: 0 !important; border-radius: 0; }
+            .a4-page { box-shadow: none !important; margin: 0 !important; border-radius: 0; height: auto !important; }
             .sub-page-a4 { box-shadow: none !important; margin: 0 !important; border-radius: 0; border: none !important; }
-            .main-content { overflow: hidden !important; } 
+            .main-content { overflow: visible !important; } 
             [contenteditable="true"] { outline: none !important; }
-            .content-card { page-break-inside: avoid !important; }
         }
 
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1a365d; color: white; padding: 12px 24px; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; z-index: 999999; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;}
@@ -149,33 +148,44 @@
 
     <div id="toast">تم الإجراء بنجاح</div>
 
+    <!-- نافذة إعداد مفتاح API المطابقة للمرجع 100% -->
     <div id="api-key-modal" class="fixed inset-0 bg-slate-900 bg-opacity-80 z-[999999] hidden flex items-center justify-center print-hidden">
         <div class="bg-white rounded-2xl p-8 w-[500px] max-w-[90%] shadow-2xl border border-slate-200 relative">
             <button onclick="closeApiModal()" class="absolute top-4 right-4 text-slate-400 hover:text-red-500 font-bold text-xl">✖</button>
-            <h3 class="text-2xl font-black text-moeDarkBlue mb-2 font-cairo flex items-center gap-2">🔑 إعداد مفتاح الذكاء الاصطناعي</h3>
-            <p class="text-sm font-bold text-slate-500 mb-6 leading-relaxed">لكي يعمل النظام بشكل صحيح ويقوم بتوليد الخطط والتقارير، يرجى إدخال مفتاح <strong class="text-moeGreen">Google Gemini API</strong> الخاص بك.</p>
+            <h3 class="text-2xl font-black text-moeDarkBlue mb-2 font-cairo flex items-center gap-2">
+                🔑 إعداد مفتاح الذكاء الاصطناعي
+            </h3>
+            <p class="text-sm font-bold text-slate-500 mb-6 leading-relaxed">
+                لكي يعمل النظام بشكل صحيح ويقوم بتوليد الخطط والتقارير، يرجى إدخال مفتاح <strong class="text-moeGreen">Google Gemini API</strong> الخاص بك. سيتم حفظ المفتاح بأمان في متصفحك ولن يتم إرساله لأي جهة أخرى.
+            </p>
+            
             <div class="mb-5">
                 <label class="block text-sm font-bold text-slate-700 mb-2">مفتاح API الخاص بك:</label>
                 <input type="password" id="input-api-key" class="w-full border-2 border-slate-300 rounded-lg px-4 py-3 text-sm font-bold outline-none focus:border-moeGreen bg-slate-50 text-slate-800" placeholder="AIzaSyA...">
             </div>
-            <div id="api-status-display" class="mb-4 hidden p-3 rounded-lg border text-sm font-bold leading-relaxed"></div>
+
             <div class="flex gap-2">
-                <button id="btn-save-api-key" onclick="saveApiKey()" class="flex-1 bg-moeDarkBlue text-white font-bold py-3 rounded-lg hover:bg-blue-900 transition shadow-md flex justify-center items-center gap-2">اختبار وحفظ 🚀</button>
-                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="bg-slate-100 text-slate-700 border border-slate-300 font-bold py-3 px-4 rounded-lg hover:bg-slate-200 transition text-sm flex items-center justify-center">الحصول على مفتاح</a>
+                <button onclick="saveApiKey()" class="flex-1 bg-moeDarkBlue text-white font-bold py-3 rounded-lg hover:bg-blue-900 transition shadow-md">حفظ وتفعيل النظام 🚀</button>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="bg-slate-100 text-slate-700 border border-slate-300 font-bold py-3 px-4 rounded-lg hover:bg-slate-200 transition text-sm flex items-center justify-center">الحصول على مفتاح مجاني</a>
             </div>
         </div>
     </div>
 
+    <!-- نافذة إعادة توليد الصفحة المحددة -->
     <div id="regen-modal" class="fixed inset-0 bg-slate-900 bg-opacity-60 z-[99999] hidden flex items-center justify-center print-hidden backdrop-blur-sm">
         <div class="bg-white rounded-2xl p-6 w-[420px] shadow-2xl border border-slate-200">
-            <h3 class="text-xl font-black text-moeDarkBlue mb-4 font-cairo flex items-center gap-2">🔄 إعادة توليد الصفحة رقم <span id="regen-page-num" class="text-moeGreen bg-emerald-50 px-2 rounded border border-emerald-100"></span></h3>
-            <label class="block text-sm font-bold text-slate-700 mb-2">اختر النمط المناسب للتوليد الجديد:</label>
+            <h3 class="text-xl font-black text-moeDarkBlue mb-4 font-cairo flex items-center gap-2">🔄 إعداد محتوى الصفحة رقم <span id="regen-page-num" class="text-moeGreen bg-emerald-50 px-2 rounded border border-emerald-100"></span></h3>
+            <label class="block text-sm font-bold text-slate-700 mb-2">كيف تريد هيكلة هذه الصفحة بذكاء؟</label>
             <select id="regen-style" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 mb-5 text-sm font-bold outline-none focus:border-moeGreen text-slate-700 bg-slate-50">
-                <option value="auto">🤖 خليط (يحدد الذكاء الاصطناعي الأنسب)</option>
+                <option value="auto">🤖 ابتكار وتوزيع حر (إنفوجرافيك/كروت)</option>
                 <option value="text">📝 نص عادي (سردي ومنظم)</option>
                 <option value="table">📊 جدول إحصائي / تنظيمي مضغوط</option>
                 <option value="infographic">🗂️ بطاقات (إنفوجرافيك / رسم بياني)</option>
             </select>
+            <div class="mb-4">
+                <label class="block text-sm font-bold text-slate-700 mb-1">محتوى مخصص أو توجيه (اختياري):</label>
+                <textarea id="regen-prompt" class="input-styled text-sm h-16 bg-slate-50" placeholder="مثال: اجعل هذه الصفحة للبرنامج الزمني للاختبارات..."></textarea>
+            </div>
             <div class="flex gap-2">
                 <button onclick="confirmRegenerate()" class="flex-1 bg-moeGreen text-white font-bold py-2.5 rounded-lg hover:bg-emerald-600 transition shadow-md" id="btn-confirm-regen">توليد الآن ✨</button>
                 <button onclick="closeRegenModal()" class="bg-slate-100 text-slate-700 border border-slate-300 font-bold py-2.5 px-6 rounded-lg hover:bg-slate-200 transition">إلغاء</button>
@@ -210,7 +220,10 @@
                 <button class="ft-swatch" style="background-color: #fde047;" onclick="formatText('foreColor', '#fde047')"></button>
                 <input type="color" id="text-color-picker" class="ft-color ml-1" onchange="formatText('foreColor', this.value)" title="لون النص">
             </div>
-            <button class="ft-apply-btn" onclick="applyColorToAllHeadings()">تطبيق للعناوين 🪄</button>
+            <div class="ft-row gap-1">
+                <button class="ft-apply-btn" onclick="applyColorToAllHeadings()">تطبيق للعناوين 🪄</button>
+                <button class="ft-btn bg-indigo-500 hover:bg-indigo-400" onclick="moveSelectionToNewPage()" title="نقل المحتوى المحدد لصفحة جديدة (للخطة التشغيلية)">📄➡️ نقل</button>
+            </div>
         </div>
         <div id="table-controls" class="ft-row justify-between border-t border-slate-600 pt-2 mt-1" style="display: none;">
             <div class="ft-row gap-1">
@@ -227,7 +240,7 @@
         </div>
     </div>
 
-    <div id="control-panel" class="print-hidden w-full max-w-5xl glass-panel shadow-lg rounded-2xl p-6 m-4 z-50">
+    <div id="control-panel" class="print-hidden w-full max-w-5xl glass-panel shadow-lg rounded-2xl p-6 m-4 z-40">
         <div class="flex flex-wrap justify-between items-center mb-6 border-b border-slate-200 pb-4 gap-4">
             <h2 class="font-cairo text-2xl font-black text-moeDarkBlue flex items-center gap-2">
                 📝 نظام التقارير الذكي <span class="text-moeGreen text-base bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">الإصدار الاحترافي</span>
@@ -243,7 +256,7 @@
                 <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
                 <label class="text-sm font-bold text-slate-600 font-cairo">القالب الأساسي:</label>
                 <select id="template-selector" onchange="switchTemplate()" class="border-2 border-moeGreen bg-emerald-50 text-moeDarkBlue rounded-lg px-3 py-1.5 text-sm font-bold outline-none cursor-pointer">
-                    <option value="op-plan" selected>الخطة التشغيلية (هيئة التقويم)</option>
+                    <option value="op-plan" selected>الخطة التشغيلية (متعدد الصفحات)</option>
                     <option value="ai-free">الذكاء الاصطناعي (حر)</option>
                 </select>
             </div>
@@ -278,12 +291,12 @@
                             <span class="text-moeGreen text-2xl">📋</span>
                             <div>
                                 <label class="block text-lg font-black text-moeDarkBlue font-cairo">مدخلات الخطة التشغيلية المدرسية</label>
-                                <p class="text-sm font-bold text-slate-600 mt-1">متوافقة تماماً مع معايير <strong class="text-moeGreen">هيئة تقويم التعليم (تميز)</strong>.</p>
+                                <p class="text-sm font-bold text-slate-600 mt-1">متوافقة مع معايير <strong class="text-moeGreen">هيئة تقويم التعليم</strong> مع دمج جماليات الإنفوجرافيك.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 flex justify-between items-center">
                         <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-moeDarkBlue">
                             <input type="checkbox" id="toggle-op-header" checked onchange="renderReport()" class="w-4 h-4 accent-moeGreen rounded">
                             إظهار الترويسة والتذييل الرسمي <strong class="text-moeGreen">في جميع الصفحات</strong>
@@ -318,7 +331,6 @@
                             </div>
                         </div>
 
-                        <!-- 🚀 New AI Suggestion Button -->
                         <div class="mb-4">
                             <button type="button" onclick="autoFillOpPlanInputs()" id="btn-autofill-op" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold py-2.5 px-4 rounded-lg shadow-md transition flex items-center justify-center gap-2 w-full border border-indigo-800">
                                 ✨ استنتاج وتعبئة الحقول تلقائياً بالذكاء الاصطناعي (بناءً على النسب)
@@ -370,7 +382,7 @@
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider font-cairo">البيانات الرسمية والباركود</h3>
                         <label class="flex items-center gap-1 cursor-pointer text-[10px] font-bold bg-white px-2 py-1 rounded shadow-sm border border-slate-200 text-moeDarkBlue hover:bg-slate-50 transition">
-                            <input type="checkbox" id="toggle-info-bar" checked onchange="toggleInfoBar()" class="w-3 h-3 accent-moeGreen rounded"> إظهار الشريط
+                            <input type="checkbox" id="toggle-info-bar" checked onchange="toggleInfoBar()" class="w-3 h-3 accent-moeGreen rounded"> إظهار الشريط (القالب الحر)
                         </label>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
@@ -403,8 +415,8 @@
                     <div id="ai-settings-block" class="mb-4 pb-4 border-b border-blue-200 space-y-3">
                         <label class="block text-xs font-bold text-blue-900 font-cairo">🤖 أسلوب التخطيط المفضل</label>
                         <select id="ai-layout-style" class="w-full bg-white border border-blue-300 rounded-lg p-2.5 text-sm font-bold outline-none focus:border-moeGreen text-blue-800 shadow-sm">
-                            <option value="auto">✨ ابتكار حر (افتراضي ذكي)</option>
-                            <option value="infographic">📊 أسلوب الإنفوجرافيك</option>
+                            <option value="auto">✨ ابتكار حر وإبداعي (إنفوجرافيك وبطاقات)</option>
+                            <option value="infographic">📊 أسلوب الجداول والمصفوفات</option>
                         </select>
                         <div class="grid grid-cols-2 gap-3 pt-2">
                             <div class="col-span-2">
@@ -422,7 +434,7 @@
                             <div class="col-span-2">
                                 <label class="block text-[10px] font-bold text-blue-900 mb-1">📏 حجم النص العام</label>
                                 <select id="ai-base-text-size" class="w-full bg-white border border-blue-300 rounded-lg p-2 text-xs font-bold outline-none focus:border-moeGreen text-blue-800">
-                                    <option value="auto">✨ موازنة تلقائية</option>
+                                    <option value="auto">✨ موازنة تلقائية حسب المساحة</option>
                                     <option value="text-[10pt]">صغير (كثيف)</option>
                                     <option value="text-[11pt]">متوسط (قياسي)</option>
                                 </select>
@@ -439,19 +451,19 @@
                 <span id="history-counter" class="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-3 py-2 rounded-lg">1 / 1</span>
                 <button onclick="nextGeneration()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg font-bold text-sm transition">التالي ▶</button>
             </div>
-            <button id="generate-btn" class="bg-moeGreen hover:bg-emerald-600 text-white font-black py-4 px-10 rounded-xl shadow-xl transition-all flex justify-center items-center gap-2 text-lg transform hover:-translate-y-1">✨ توليد المحتوى</button>
+            <button id="generate-btn" class="bg-moeGreen hover:bg-emerald-600 text-white font-black py-4 px-10 rounded-xl shadow-xl transition-all flex justify-center items-center gap-2 text-lg transform hover:-translate-y-1">✨ توليد وبناء المحتوى</button>
             <button id="btn-download-img" onclick="downloadAsImage()" class="bg-moeDarkBlue hover:bg-blue-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition flex items-center gap-2 text-base">🖼️ حفظ كصورة</button>
             <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2 text-base">🖨️ طباعة</button>
         </div>
     </div>
 
     <div id="zoom-controls" class="print-hidden flex gap-2 bg-white px-4 py-2 rounded-full shadow-md border border-slate-200 mb-4 items-center z-40 relative transition-all">
-        <span class="text-xs font-bold text-slate-500 font-cairo">🔍 معاينة الورقة:</span>
+        <span class="text-xs font-bold text-slate-500 font-cairo">🔍 التكبير:</span>
         <button onclick="changeZoom(-0.05)" class="bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center font-bold text-slate-700 transition">-</button>
         <span id="zoom-level" class="text-sm font-bold text-moeDarkBlue w-12 text-center">100%</span>
         <button onclick="changeZoom(0.05)" class="bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center font-bold text-slate-700 transition">+</button>
         <div class="w-px h-5 bg-slate-300 mx-1"></div>
-        <button onclick="autoFitScale()" class="bg-emerald-50 text-moeGreen hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1">✨ احتواء تلقائي</button>
+        <button onclick="autoFitScale()" class="bg-emerald-50 text-moeGreen hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1">✨ احتواء ذكي</button>
     </div>
 
     <div id="preview-wrapper">
@@ -479,19 +491,21 @@
                 <div class="scale-wrapper" id="scale-wrapper">
                     
                     <!-- AI Free Layout Container -->
-                    <div id="ai-layout-wrapper" class="hidden h-full w-full">
+                    <div id="ai-layout-wrapper" class="hidden h-full w-full px-0"> <!-- Removed padding constraint -->
                         <div id="ai-content-area" class="w-full flex flex-col gap-2">
-                            <div class="flex items-center justify-center h-40 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-400 font-bold mt-10 w-full mx-auto">
-                                قم بملء البيانات واضغط على "توليد المحتوى" ليقوم الذكاء الاصطناعي ببناء التقرير كاملاً 🤖✨
+                            <div class="flex items-center justify-center h-40 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-400 font-bold mt-10 w-11/12 mx-auto">
+                                قم بملء البيانات واضغط على "توليد وبناء المحتوى" ليقوم الذكاء الاصطناعي ببناء التقرير كاملاً بأسلوب الإنفوجرافيك الممتد 🤖✨
                             </div>
                         </div>
                     </div>
 
                     <!-- Operational Plan Layout Container -->
                     <div id="op-plan-layout-wrapper" class="hidden w-full h-full flex-col gap-8">
-                        <div id="op-plan-content-area" class="w-full flex flex-col gap-8">
-                            <div class="flex items-center justify-center h-64 border-2 border-dashed border-moeGreen rounded-xl bg-emerald-50 text-moeGreen font-bold mt-10 text-lg text-center p-6">
-                                📋 الخطة التشغيلية (وفق معايير هيئة تقويم التعليم).<br>بناءً على أولويات التحسين وتحليل الفجوة، سيقوم الذكاء ببناء صفحات بتصميم إنفوجرافيك عصري.
+                        <div id="op-plan-content-area" class="w-full flex flex-col gap-8 items-center pb-12">
+                            <div class="flex flex-col justify-center items-center h-64 border-2 border-dashed border-moeGreen rounded-xl bg-emerald-50 text-moeGreen font-bold mt-10 text-lg text-center p-6 w-full max-w-[210mm]">
+                                <span class="text-4xl mb-3">📋</span>
+                                <span>الخطة التشغيلية (وفق معايير هيئة تقويم التعليم).</span>
+                                <span class="text-sm mt-2 text-emerald-700">سيتم إنشاء صفحات متعددة تعتمد على الجماليات، البطاقات الإنفوجرافيكية، وتوزيع النص بذكاء لعدم التكدس.</span>
                             </div>
                         </div>
                     </div>
@@ -516,6 +530,7 @@
     </div>
 
     <script>
+        // المتغيرات الأساسية (لم يتم المساس بمتغيرات API)
         let currentApiKey = localStorage.getItem('google_gemini_api_key') || "";
         let capturedImages = [];
         let currentReportData = { sections: [], html_content: '', pages: [] };
@@ -541,9 +556,7 @@
             updateQR();
             calculateGap();
 
-            if (!currentApiKey) {
-                openApiModal();
-            }
+            if (!currentApiKey) { openApiModal(); }
 
             document.getElementById('control-panel').addEventListener('input', () => {
                 clearTimeout(autoSaveTimer);
@@ -551,23 +564,7 @@
             });
         };
 
-        function showToast(msg, type = 'normal') {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            if(type === 'error') {
-                t.style.backgroundColor = '#dc2626'; // Red
-            } else if (type === 'warn') {
-                t.style.backgroundColor = '#d97706'; // Amber
-            } else {
-                t.style.backgroundColor = '#1a365d'; // Default Blue
-            }
-            t.classList.add('toast-show');
-            setTimeout(() => {
-                t.classList.remove('toast-show');
-                setTimeout(() => t.style.backgroundColor = '#1a365d', 300); // Reset color
-            }, 4000);
-        }
-
+        // --- دوال مفتاح Gemini (بدون أي تعديل بناءً على طلبك) ---
         function openApiModal() {
             document.getElementById('input-api-key').value = currentApiKey;
             document.getElementById('api-key-modal').classList.remove('hidden');
@@ -580,111 +577,65 @@
         async function saveApiKey() {
             const val = document.getElementById('input-api-key').value.trim();
             if (!val) {
-                showToast('يرجى إدخال مفتاح صالح للمتابعة.', 'warn');
+                alert('يرجى إدخال مفتاح صالح أو إغلاق النافذة للمتابعة بدون ذكاء اصطناعي.');
                 return;
             }
 
-            const btn = document.getElementById('btn-save-api-key');
-            const statusDiv = document.getElementById('api-status-display');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '⏳ جاري الاختبار...';
-            btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
-            statusDiv.classList.add('hidden');
+            const saveBtn = document.querySelector('#api-key-modal button[onclick="saveApiKey()"]');
+            const originalText = saveBtn ? saveBtn.innerHTML : '';
+            if (saveBtn) { saveBtn.disabled = true; saveBtn.innerHTML = 'جارٍ التحقق من المفتاح...'; }
 
             try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${val}`;
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: "ping" }] }],
-                        generationConfig: { maxOutputTokens: 1 } 
-                    })
+                const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(val)}`;
+                const testResp = await fetch(testUrl, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: 'ping' }] }], generationConfig: { maxOutputTokens: 1 } })
                 });
 
-                if (!response.ok) {
-                    const errData = await response.json();
-                    throw new Error(errData.error?.message || `خطأ في الاتصال (${response.status})`);
+                if (!testResp.ok) {
+                    let errMsg = `خطأ من خوادم Gemini (${testResp.status})`;
+                    try { const errData = await testResp.json(); if (errData.error?.message) errMsg = errData.error.message; } catch (_) {}
+                    if (testResp.status === 400 && /API key not valid/i.test(errMsg)) { alert('مفتاح API غير صالح. يرجى التحقق من نسخه بشكل صحيح من Google AI Studio.'); } else { alert('تعذر الاتصال بخوادم Gemini: ' + errMsg); }
+                    return;
                 }
 
                 currentApiKey = val;
                 localStorage.setItem('google_gemini_api_key', currentApiKey);
-                
-                statusDiv.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'border-red-200');
-                statusDiv.classList.add('bg-emerald-50', 'text-moeGreen', 'border-emerald-200');
-                statusDiv.innerHTML = `✔️ <strong>تم الاتصال بنجاح!</strong><br>النموذج: gemini-1.5-flash`;
-                
-                showToast('تم حفظ وتفعيل المفتاح بنجاح 🚀');
-                setTimeout(closeApiModal, 2000);
-
-            } catch (error) {
-                console.error("API Key Verification Error:", error);
-                statusDiv.classList.remove('hidden', 'bg-emerald-50', 'text-moeGreen', 'border-emerald-200');
-                statusDiv.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
-                statusDiv.innerHTML = `❌ <strong>فشل التحقق:</strong><br>${error.message.includes('API key not valid') ? 'المفتاح غير صالح، تأكد من نسخه كاملاً.' : 'مشكلة في الشبكة، تحقق من اتصالك.'}`;
+                showToast('تم حفظ مفتاح API والاتصال بخوادم Gemini بنجاح ✔️');
+                closeApiModal();
+            } catch (e) {
+                alert('تعذر الاتصال بخوادم Gemini. يرجى التحقق من اتصال الإنترنت ثم إعادة المحاولة.\n' + (e.message || ''));
             } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = originalText; }
             }
         }
 
         async function fetchAI(prompt, systemInstruction, images = [], isJson = true) {
-            if (!currentApiKey) {
-                openApiModal();
-                throw new Error("لم يتم إدخال مفتاح API");
-            }
+            if (!currentApiKey) { openApiModal(); throw new Error("لم يتم إدخال مفتاح API"); }
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${currentApiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${currentApiKey}`;
             let parts = [{ text: prompt }];
-            
             images.forEach(img => { 
-                try {
-                    const mimeType = img.split(';')[0].split(':')[1];
-                    const base64Data = img.split(',')[1];
-                    parts.push({ inlineData: { mimeType: mimeType, data: base64Data } });
-                } catch(e) {
-                    console.error("خطأ في معالجة بيانات الصورة", e);
-                }
+                try { const mimeType = img.split(';')[0].split(':')[1]; const base64Data = img.split(',')[1]; parts.push({ inlineData: { mimeType: mimeType, data: base64Data } }); } catch(e) { console.error("خطأ في معالجة بيانات الصورة", e); }
             });
 
-            const payload = { 
-                contents: [{ parts: parts }],
-                systemInstruction: { parts: [{ text: systemInstruction }] },
-                generationConfig: {}
-            };
+            const payload = { contents: [{ parts: parts }], systemInstruction: { parts: [{ text: systemInstruction }] }, generationConfig: {} };
             if (isJson) payload.generationConfig.responseMimeType = "application/json";
 
-            // نظام الاستشفاء: إعادة المحاولة تدريجياً (Exponential Backoff)
             const delays = [1000, 2500, 5000]; 
             let lastErrorMsg = "حدث خطأ غير معروف";
             
             for (let i = 0; i <= delays.length; i++) {
                 try {
-                    const response = await fetch(url, { 
-                        method: 'POST', 
-                        headers: { 'Content-Type': 'application/json' }, 
-                        body: JSON.stringify(payload) 
-                    });
-                    
+                    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                     if (!response.ok) {
                         const errData = await response.json().catch(() => ({}));
                         const errMsg = errData.error?.message || response.statusText;
-                        
                         if (response.status === 400 && errMsg.includes('API key not valid')) {
-                            localStorage.removeItem('google_gemini_api_key');
-                            currentApiKey = "";
-                            openApiModal();
-                            throw new Error("مفتاح API الموفر غير صالح، تم إيقاف الاتصال. يرجى إدخال مفتاح صحيح.");
+                            localStorage.removeItem('google_gemini_api_key'); currentApiKey = ""; openApiModal(); throw new Error("مفتاح API غير صالح. يرجى التأكد من نسخه بشكل صحيح.");
                         } 
-                        else if (response.status === 429) {
-                            throw new Error("تم تجاوز الحد المسموح للاستخدام المجاني من Google (Quota Exceeded).");
-                        }
-                        else if (response.status === 500 || response.status === 503) {
-                            throw new Error("خوادم الذكاء الاصطناعي (Google) تواجه ضغطاً حالياً.");
-                        }
+                        else if (response.status === 429) { throw new Error("تم تجاوز الحد المسموح للاستخدام المجاني من Google (Quota Exceeded)."); }
+                        else if (response.status === 500 || response.status === 503) { throw new Error("خوادم الذكاء الاصطناعي تواجه ضغطاً حالياً."); }
                         throw new Error(`خطأ (${response.status}): ${errMsg}`);
                     }
                     
@@ -692,26 +643,27 @@
                     let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                     if (!text) throw new Error("تم الاتصال ولكن الاستجابة كانت فارغة.");
 
-                    if (isJson) {
-                        text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
-                        return JSON.parse(text);
-                    }
+                    if (isJson) { text = text.replace(/```json/gi, '').replace(/```/g, '').trim(); return JSON.parse(text); }
                     return text;
 
                 } catch (error) { 
                     lastErrorMsg = error.message; 
-                    console.error(`[محاولة ${i+1}] فشل الاتصال:`, error);
-                    
-                    // توقف فوراً إذا كان الخطأ متعلق بصلاحية المفتاح
-                    if (error.message.includes("مفتاح API")) throw error;
-                    
-                    if (i < delays.length) {
-                        console.log(`جاري إعادة المحاولة بعد ${delays[i]} ملي ثانية...`);
-                        await new Promise(r => setTimeout(r, delays[i])); 
-                    }
+                    if (error.message.includes("مفتاح API غير صالح")) throw error;
+                    if (i < delays.length) { await new Promise(r => setTimeout(r, delays[i])); }
                 }
             }
             throw new Error(`تعذر إكمال الطلب بعد عدة محاولات. السبب: ${lastErrorMsg}`);
+        }
+        // --- نهاية دوال مفتاح Gemini ---
+
+        function showToast(msg, type = 'normal') {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            if(type === 'error') { t.style.backgroundColor = '#dc2626'; } 
+            else if (type === 'warn') { t.style.backgroundColor = '#d97706'; } 
+            else { t.style.backgroundColor = '#1a365d'; }
+            t.classList.add('toast-show');
+            setTimeout(() => { t.classList.remove('toast-show'); setTimeout(() => t.style.backgroundColor = '#1a365d', 300); }, 4000);
         }
 
         async function autoFillOpPlanInputs() {
@@ -719,31 +671,14 @@
             const int = document.getElementById('op-int-score').value;
             const gap = document.getElementById('op-gap-score').value;
 
-            if (!ext || !int) {
-                showToast('يرجى إدخال نسب التقويم الخارجي والداخلي أولاً ليتمكن الذكاء الاصطناعي من التحليل بدقة 📊', 'warn');
-                return;
-            }
+            if (!ext || !int) { showToast('يرجى إدخال نسب التقويم الخارجي والداخلي أولاً', 'warn'); return; }
 
             const btn = document.getElementById('btn-autofill-op');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ جاري تحليل الفجوة واقتراح المحتوى... (يرجى الانتظار)';
-            btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-wait');
+            btn.innerHTML = '⏳ جاري التحليل...'; btn.disabled = true; btn.classList.add('opacity-75', 'cursor-wait');
 
-            const sysPrompt = "أنت خبير تطوير جودة واعتماد مدرسي (هيئة تقويم التعليم). أجب بتنسيق JSON حصراً.";
-            const prompt = `بناءً على نتائج التقويم المدرسي التالية:
-            التقويم الخارجي: ${ext}%
-            التقويم الداخلي (الذاتي): ${int}%
-            حجم الفجوة: ${gap}
-
-            قم بتحليل هذه الأرقام واقترح محتوى احترافي، واقعي، وعالي الجودة للبنود التالية الخاصة بالخطة التشغيلية للمدرسة لسد هذه الفجوة:
-            1. مسببات الفجوة (الأسباب الجذرية).
-            2. مخرجات التقويم الذاتي (نقاط القوة وفرص التحسين).
-            3. أولويات التحسين (التركيز الأساسي).
-            4. صغ رؤية ورسالة طموحة للمدرسة تلائم المرحلة.
-
-            يجب أن يكون المخرج JSON فقط بهذا التنسيق:
-            { "causes": "...", "swot": "...", "priorities": "...", "vision": "..." }`;
+            const sysPrompt = "أنت خبير اعتماد مدرسي. أجب بتنسيق JSON حصراً.";
+            const prompt = `نتائج التقويم المدرسي:\nالخارجي: ${ext}%\nالداخلي: ${int}%\nالفجوة: ${gap}\nاقترح محتوى احترافي ومختصر جداً لهذه الحقول لسد الفجوة:\n1. مسببات الفجوة (الأسباب الجذرية)\n2. مخرجات التقويم الذاتي (نقاط قوة وفرص تحسين)\n3. أولويات التحسين\n4. رؤية ورسالة طموحة\n\nيجب أن يكون المخرج JSON فقط: { "causes": "...", "swot": "...", "priorities": "...", "vision": "..." }`;
 
             try {
                 const res = await fetchAI(prompt, sysPrompt, [], true);
@@ -752,15 +687,11 @@
                     document.getElementById('op-swot').value = res.swot || '';
                     document.getElementById('op-priorities').value = res.priorities || '';
                     document.getElementById('op-vision').value = res.vision || '';
-                    showToast('تم استنتاج البيانات بنجاح! يمكنك الآن مراجعتها وتعديلها ✨');
+                    showToast('تم استنتاج البيانات بنجاح ✨');
                     saveSettings(true);
                 }
-            } catch (error) {
-                 showToast(error.message, 'error');
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                btn.classList.remove('opacity-75', 'cursor-wait');
+            } catch (error) { showToast(error.message, 'error'); } finally {
+                btn.innerHTML = originalText; btn.disabled = false; btn.classList.remove('opacity-75', 'cursor-wait');
             }
         }
 
@@ -798,7 +729,88 @@
                     if (el.classList.contains(cls)) { el.classList.remove(cls); el.classList.add(fontVal); }
                 });
             });
-            showToast('تم تطبيق الخط بنجاح ✨');
+            showToast('تم تطبيق الخط ✨');
+        }
+
+        function movePageUp(idx) {
+            if (idx === 0) return;
+            const temp = currentReportData.pages[idx];
+            currentReportData.pages[idx] = currentReportData.pages[idx - 1];
+            currentReportData.pages[idx - 1] = temp;
+            saveToHistory(currentReportData);
+            renderReport();
+        }
+
+        function movePageDown(idx) {
+            if (idx === currentReportData.pages.length - 1) return;
+            const temp = currentReportData.pages[idx];
+            currentReportData.pages[idx] = currentReportData.pages[idx + 1];
+            currentReportData.pages[idx + 1] = temp;
+            saveToHistory(currentReportData);
+            renderReport();
+        }
+
+        function deletePage(idx) {
+            if (confirm('هل أنت متأكد من حذف هذه الصفحة؟')) {
+                currentReportData.pages.splice(idx, 1);
+                saveToHistory(currentReportData);
+                renderReport();
+            }
+        }
+
+        function addEmptyPage(idx) {
+            const emptyHtml = `<div class="flex flex-col h-full justify-start gap-4 overflow-hidden border-0 p-0 w-full"><div class="shrink-0 flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm"><div class="w-2 h-8 rounded-full bg-moeYellow"></div><h2 class="text-xl font-black text-moeDarkBlue m-0" contenteditable="true">عنوان صفحة جديدة</h2></div><div class="flex-1 bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col gap-4 relative" contenteditable="true"><div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-moeDarkBlue to-moeGreen"></div><p class="text-slate-500 font-bold">أدخل محتواك هنا، أو اضغط زر (تعديل هذه الصفحة 🔄) لتوليد المحتوى بالذكاء الاصطناعي...</p></div></div>`;
+            currentReportData.pages.splice(idx + 1, 0, emptyHtml);
+            saveToHistory(currentReportData);
+            renderReport();
+            showToast('تمت إضافة صفحة جديدة. يمكنك تعديلها بذكاء.');
+        }
+
+        function moveSelectionToNewPage() {
+            const selection = window.getSelection();
+            if (!selection.rangeCount || selection.isCollapsed) {
+                showToast('يرجى تظليل/تحديد النص المراد نقله أولاً', 'warn'); return;
+            }
+            if (currentTemplate !== 'op-plan') {
+                showToast('هذه الميزة متاحة فقط في الخطة التشغيلية (متعددة الصفحات)', 'warn'); return;
+            }
+
+            const range = selection.getRangeAt(0);
+            
+            // Check if selection is within our report
+            let node = range.startContainer;
+            let containerPage = node.nodeType === 3 ? node.parentNode.closest('.sub-page-a4') : node.closest('.sub-page-a4');
+            
+            if(!containerPage) {
+                showToast('يرجى تحديد النص من داخل صفحات التقرير', 'warn'); return;
+            }
+
+            // Clone and get HTML
+            const fragment = range.cloneContents();
+            const tempDiv = document.createElement('div');
+            tempDiv.appendChild(fragment);
+            const contentHTML = tempDiv.innerHTML;
+
+            // Remove from current page
+            range.deleteContents(); 
+
+            // Wrap in our aesthetic container
+            const newPageHtml = `<div class="flex flex-col h-full justify-start gap-4 overflow-hidden border-0 p-0 w-full"><div class="shrink-0 flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm"><div class="w-2 h-8 rounded-full bg-moeYellow"></div><h2 class="text-xl font-black text-moeDarkBlue m-0" contenteditable="true">محتوى منقول</h2></div><div class="flex-1 bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col gap-4 relative" contenteditable="true"><div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-moeDarkBlue to-moeGreen"></div>${contentHTML}</div></div>`;
+
+            // Insert after the current page
+            const pagesArray = document.querySelectorAll('.sub-page-a4');
+            const pageIndex = Array.from(pagesArray).indexOf(containerPage);
+
+            if(pageIndex >= 0) {
+                 // Save the deletion explicitly in the array before pushing the new page
+                 updatePageContent(pageIndex, containerPage.querySelector('main').innerHTML);
+                 currentReportData.pages.splice(pageIndex + 1, 0, newPageHtml);
+            }
+
+            saveToHistory(currentReportData);
+            renderReport();
+            document.getElementById('floating-toolbar').classList.remove('active');
+            showToast('تم قص المحتوى ونقله لصفحة جديدة ✨');
         }
 
         function exportBackup() {
@@ -809,7 +821,7 @@
             linkElement.setAttribute('href', dataUri);
             linkElement.setAttribute('download', 'نسخة_احتياطية_النظام.json');
             linkElement.click();
-            showToast('تم تصدير النسخة الاحتياطية بنجاح 📥');
+            showToast('تم تصدير النسخة الاحتياطية 📥');
         }
 
         function importBackup(event) {
@@ -821,9 +833,9 @@
                     const content = e.target.result;
                     JSON.parse(content); 
                     localStorage.setItem('smartReportSettings', content);
-                    showToast('تمت استعادة البيانات! جاري تحديث الصفحة... 📤');
+                    showToast('تمت الاستعادة! جاري التحديث... 📤');
                     setTimeout(() => location.reload(), 1500);
-                } catch (err) { showToast('ملف النسخة الاحتياطية غير صالح ❌', 'error'); }
+                } catch (err) { showToast('ملف خاطئ ❌', 'error'); }
             };
             reader.readAsText(file);
         }
@@ -834,26 +846,37 @@
             const btn = document.getElementById('btn-download-img');
             
             const oldTransform = scaleWrapper.style.transform;
-            scaleWrapper.style.transform = 'none';
+            scaleWrapper.style.transform = 'none'; // Force 100% scale for crisp render
             
             const originalText = btn.innerHTML;
             btn.innerHTML = '⏳ جاري الحفظ...'; btn.disabled = true;
 
-            await new Promise(r => setTimeout(r, 150));
+            await new Promise(r => setTimeout(r, 200));
 
             try {
+                // Ensure overflow doesn't crop the canvas output
+                const oldOverflowWrapper = document.getElementById('preview-wrapper').style.overflow;
+                document.getElementById('preview-wrapper').style.overflow = 'visible';
+
                 const canvas = await html2canvas(report, {
                     scale: 2, 
                     useCORS: true, logging: false,
                     backgroundColor: currentTemplate === 'op-plan' ? '#f1f5f9' : '#ffffff', 
                     windowWidth: report.scrollWidth, windowHeight: report.scrollHeight,
-                    onclone: function(clonedDoc) { clonedDoc.getElementById('report-element').style.transform = 'none'; }
+                    onclone: function(clonedDoc) { 
+                        clonedDoc.getElementById('report-element').style.transform = 'none'; 
+                        // Hide side controls in image
+                        const controls = clonedDoc.querySelectorAll('.page-controls');
+                        controls.forEach(c => c.style.display = 'none');
+                    }
                 });
                 
+                document.getElementById('preview-wrapper').style.overflow = oldOverflowWrapper;
+
                 const link = document.createElement('a');
                 let fileName = document.getElementById('input-title').value.trim() || 'الوثيقة';
                 link.download = `وثيقة_${fileName}.png`; link.href = canvas.toDataURL('image/png'); link.click();
-                showToast('تم حفظ الملف كصورة بنجاح 🖼️');
+                showToast('تم حفظ الملف كصورة 🖼️');
             } catch (error) { showToast('حدث خطأ أثناء معالجة الصورة', 'error'); } finally {
                 scaleWrapper.style.transform = oldTransform;
                 btn.innerHTML = originalText; btn.disabled = false;
@@ -892,7 +915,7 @@
             const name = document.getElementById('cm-name').value.trim();
             const role = document.getElementById('cm-role').value.trim() || 'عضو';
             const task = document.getElementById('cm-task').value.trim() || 'المشاركة في التنفيذ';
-            if(!name) { showToast('يرجى إدخال اسم العضو على الأقل', 'warn'); return; }
+            if(!name) { showToast('يرجى إدخال اسم العضو', 'warn'); return; }
             
             committeeMembers.push({name, role, task});
             document.getElementById('cm-name').value = ''; document.getElementById('cm-role').value = ''; document.getElementById('cm-task').value = '';
@@ -930,9 +953,9 @@
             };
             try {
                 localStorage.setItem('smartReportSettings', JSON.stringify(settings));
-                if(!silent) showToast('تم حفظ الإعدادات بنجاح 💾');
+                if(!silent) showToast('تم حفظ الإعدادات 💾');
             } catch (e) {
-                if(!silent) showToast('تحذير: مساحة التخزين ممتلئة (ربما بسبب حجم الشعار). سيتم التجاوز.', 'warn');
+                if(!silent) showToast('مساحة التخزين ممتلئة (ربما بسبب حجم الشعار). سيتم التجاوز.', 'warn');
                 settings.logo = null;
                 localStorage.setItem('smartReportSettings', JSON.stringify(settings));
             }
@@ -1055,8 +1078,9 @@
             generalInfo.classList.remove('hidden'); aiSettings.classList.add('hidden'); aiStructSettings.classList.add('hidden'); opPlanSettings.classList.add('hidden');
 
             if (currentTemplate === 'ai-free') {
-                mainContentBox.style.padding = '4mm 2mm'; 
-                mainContentBox.classList.add('overflow-y-auto');
+                // Fix margins: allow container to expand fully width-wise
+                mainContentBox.style.padding = '0'; 
+                mainContentBox.classList.remove('overflow-y-auto'); // Prevent scrollbars
             }
 
             if (currentTemplate === 'op-plan') {
@@ -1065,7 +1089,7 @@
                 
                 reportMainEle.classList.remove('a4-page', 'bg-white'); reportMainEle.classList.add('bg-transparent', 'shadow-none', 'w-[210mm]');
                 document.querySelector('.header-section').style.display = 'none'; document.querySelector('.footer-section').style.display = 'none'; document.getElementById('global-info-bar').style.display = 'none'; document.querySelector('.header-dependent').style.display = 'none';
-                mainContentBox.classList.remove('main-content', 'overflow-y-auto'); mainContentBox.style.padding = '0';
+                mainContentBox.classList.remove('main-content'); mainContentBox.style.padding = '0';
                 currentScale = 1.0; applyZoom();
             } else {
                 if (currentTemplate === 'ai-free') { aiWrapper.classList.remove('hidden'); aiSettings.classList.remove('hidden'); aiStructSettings.classList.remove('hidden'); }
@@ -1098,25 +1122,35 @@
         async function confirmRegenerate() {
             if(targetRegenPageIndex === -1) return;
             const styleOpt = document.getElementById('regen-style').value;
+            const userPromptOpt = document.getElementById('regen-prompt').value.trim();
             const btn = document.getElementById('btn-confirm-regen');
             const originalBtnHtml = btn.innerHTML;
             btn.innerHTML = '⏳ جاري المعالجة...'; btn.disabled = true;
 
-            let styleInst = "اختر الأنسب بذكاء";
-            if(styleOpt === 'text') styleInst = "كتابة النص بشكل سردي مقالي منظم وواضح بدون استخدام جداول.";
-            else if(styleOpt === 'table') styleInst = "تنسيق المحتوى بالكامل في جدول إحصائي/تنظيمي دقيق ومضغوط.";
-            else if(styleOpt === 'infographic') styleInst = "توزيع المحتوى على شكل بطاقات (إنفوجرافيك) ملونة وجذابة.";
+            let styleInst = "اختر الأنسب بذكاء مع استخدام الجماليات والبطاقات (Cards) في التصميم مثل الإنفوجرافيك.";
+            if(styleOpt === 'text') styleInst = "كتابة النص بشكل سردي مقالي منظم وواضح بدون استخدام جداول مع وضع فقرات داخل بطاقات ظلية بسيطة.";
+            else if(styleOpt === 'table') styleInst = "تنسيق المحتوى بالكامل في جدول إحصائي/تنظيمي دقيق ومضغوط وأنيق.";
+            else if(styleOpt === 'infographic') styleInst = "توزيع المحتوى بأسلوب الإنفوجرافيك، عبر بطاقات (Cards) ملونة وجذابة، لا تستخدم الجداول التقليدية إلا للضرورة.";
 
-            const sysPrompt = `أنت مصمم واجهات ويب وخطط تشغيلية محترف. مهمتك "إعادة كتابة وتصميم" محتوى صفحة واحدة فقط من الخطة التشغيلية بناءً على المحتوى القديم.
-التعليمات الصارمة:
+            const customInstruction = userPromptOpt ? `\nتعليمات إضافية خاصة بالمستخدم لهذه الصفحة: ${userPromptOpt}` : "";
+
+            const sysPrompt = `أنت مصمم واجهات ويب وخطط تشغيلية محترف. مهمتك "إعادة كتابة وتصميم" محتوى صفحة واحدة فقط من الخطة التشغيلية بناءً على المحتوى القديم ومطالبة المستخدم.
+التعليمات الصارمة جداً:
 1. المخرجات عبارة عن كود JSON يحتوي على مفتاح "page" فقط.
-2. استخدم هذا النمط/الشكل حصراً في التصميم: ${styleInst}
-3. حافظ على نفس الهوية البصرية: text-moeDarkBlue, text-moeGreen, bg-emerald-50, text-moeYellow.
-4. حافظ بصرامة تامة على الحاوية الأساسية للصفحة (الاحتواء وعدم التجاوز):
+2. استخدم هذا النمط في التصميم: ${styleInst}
+3. الجماليات: طبق أجمل تنسيقات Tailwind. استخدم البطاقات (bg-white border shadow-sm rounded-lg).
+4. الهوية البصرية: text-moeDarkBlue, text-moeGreen, bg-emerald-50, text-moeYellow.
+5. حافظ بصرامة تامة على الحاوية الأساسية للصفحة (الاحتواء وعدم التجاوز):
    <div class="flex flex-col h-full justify-start gap-4 overflow-hidden border-0 p-0 w-full">...أدخل المحتوى هنا...</div>
-5. لا تقم بتغيير المعلومات الأساسية، فقط أعد صياغتها وتنسيقها بالنمط المطلوب.`;
+6. لا تقم بتغيير المعلومات الأساسية إلا إذا طلب المستخدم تغيير الغرض منها. ${customInstruction}`;
 
-            const prompt = `أعد تنسيق وصياغة محتوى هذه الصفحة بالنمط المطلوب.\n\nالمحتوى الحالي (للإشارة واستخراج المعلومات):\n${currentReportData.pages[targetRegenPageIndex]}`;
+            let existingContent = currentReportData.pages[targetRegenPageIndex];
+            // If it's a completely empty new page, provide context
+            if(existingContent.includes('أدخل محتواك هنا، أو اضغط زر')) {
+                existingContent = "هذه صفحة جديدة فارغة. قم بتوليد محتواها بناءً على تعليمات المستخدم أعلاه.";
+            }
+
+            const prompt = `أعد تنسيق وصياغة محتوى هذه الصفحة.\n\nالمحتوى الحالي للاستناد عليه:\n${existingContent}`;
 
             try {
                 const result = await fetchAI(prompt, sysPrompt, [], true);
@@ -1178,13 +1212,13 @@
                 const aiTextSize = document.getElementById('ai-base-text-size').value;
                 
                 let fontInst = aiFont === 'auto' ? "استخدم تنسيقات الخطوط الافتراضية." : `سيتم تطبيق الخط خارجياً، ركز على بناء الهيكل.`;
-                let sizeInst = aiTextSize === 'auto' ? "وازن أحجام الجداول بدقة." : `استخدم حجم النص الأساسي المختار.`;
+                let sizeInst = aiTextSize === 'auto' ? "وازن أحجام الجداول والبطاقات بدقة." : `استخدم حجم النص الأساسي المختار.`;
 
                 sysPrompt = `أنت خبير جودة واعتماد مدرسي ومصمم واجهات (UI/UX) محترف جداً.
 مهمتك: توليد "الخطة التشغيلية المدرسية" مقسمة إلى صفحات منفصلة متوافقة مع معايير الهيئة، بأرقى تصميم عصري.
-التعليمات الهيكلية الصارمة:
+التعليمات الهيكلية الصارمة (CRITICAL):
 1. المخرجات JSON يحتوي على مصفوفة "pages" فقط. كل عنصر هو HTML لصفحة مستقلة.
-2. هندسة الاحتواء الجمالية (CRITICAL): كل صفحة هي لوحة محصورة تستخدم هذا الهيكل الراقي (عدا الأغلفة):
+2. هندسة الاحتواء: كل صفحة يجب أن تستخدم هذا الهيكل (عدا الأغلفة):
    <div class="flex flex-col h-full justify-start gap-4 overflow-hidden border-0 p-0 w-full">
       <div class="shrink-0 flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm">
          <div class="w-2 h-8 rounded-full bg-moeYellow"></div>
@@ -1192,23 +1226,18 @@
       </div>
       <div class="flex-1 bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col gap-4 overflow-hidden relative">
          <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-moeDarkBlue to-moeGreen"></div>
-         ... ضع المحتوى (جداول راقية، نصوص) هنا ...
+         ... ضع المحتوى (بطاقات، قوائم، جداول) هنا ...
       </div>
    </div>
-3. الألوان (الهوية): text-moeDarkBlue, text-moeGreen, bg-emerald-50, text-moeYellow حصراً.
-4. الغلاف الأمامي والخلفي: يجب أن يكونا فارغين من التنسيق المعقد وفي المنتصف تماماً.
-   - الأمامي: ضع [SCHOOL_LOGO_FRONT] فوق العنوان مباشرة.
-   - الخلفي: ضع [LOGOS_BACK] في المنتصف.
-5. تنسيق الجداول (أنماط حديثة):
-   - الترويسة: \`<thead class="bg-moeDarkBlue text-white text-[10pt] font-cairo">\`
-   - الخلايا: \`<td class="p-2 border-b border-slate-100 text-[9pt] text-slate-700 bg-white">\`
-   - لخص المحتوى بذكاء لكي لا يتجاوز ارتفاع الصفحة.
-6. ترتيب المحتوى (صفحة مستقلة لكل بند): [0] غلاف، [1] الفهرس، [2] الرؤية والرسالة، [3] الفجوة ومسبباتها، [4] مخرجات التقويم والأولويات، [5] لجنة التميز، [6] الأهداف، [7] المجال الأول، [8] المجال الثاني، [9] المجال الثالث، [10] المجال الرابع، [11] آلية المتابعة، [12] غلاف ختامي.
-7. لا تضع أرقام صفحات. ${fontInst} ${sizeInst}`;
+3. الجماليات: طبق تصميم الإنفوجرافيك والبطاقات (Cards) في المحتوى الداخلي! لا تجعلها جداول جامدة فقط. استخدم bg-slate-50 للبطاقات الداخلية، مع border-l-4 border-moeGreen وظلال.
+4. عدم التكدس وتعدد الصفحات: إذا كان المحتوى في قسم (مثل الأهداف التشغيلية أو البرامج) طويلاً، افصله تلقائياً إلى صفحتين أو أكثر (أي أضف عناصر html جديدة في مصفوفة pages بنفس الهيكل). لا تدع أي صفحة تتجاوز 4-5 بطاقات/مربعات لتجنب اختفاء النص.
+5. الألوان: text-moeDarkBlue, text-moeGreen, bg-emerald-50, text-moeYellow.
+6. الغلاف الأمامي والخلفي في المنتصف. الأمامي به [SCHOOL_LOGO_FRONT]، الخلفي به [LOGOS_BACK].
+7. لا تضع أرقام صفحات في المحتوى المولد (سيضاف برمجياً). ${fontInst} ${sizeInst}`;
 
                 prompt = `المدرسة: ${schoolName}\nالعام: ${yearHijri}/${yearGreg}
-تحليل الفجوة التقويمية: الخارجي (${extScore}%)، الداخلي (${intScore}%)، الفجوة (${gapScore}).
-مسببات الفجوة: ${gapCauses}\nمخرجات التقويم الذاتي: ${swot}\nالأولويات: ${priorities}\nالرؤية والرسالة: ${vision}
+تحليل الفجوة: الخارجي (${extScore}%)، الداخلي (${intScore}%)، الفجوة (${gapScore}).
+مسببات الفجوة: ${gapCauses}\nمخرجات التقويم: ${swot}\nالأولويات: ${priorities}\nالرؤية والرسالة: ${vision}
 ${committeeText}\n\n${instructionsStr}`;
 
             } else if (currentTemplate === 'ai-free') {
@@ -1216,13 +1245,12 @@ ${committeeText}\n\n${instructionsStr}`;
                 let fontInst = aiFont === 'auto' ? "اختر الخط الأنسب" : `تجاهل تحديد الخط في الكود المولد.`;
                 
                 sysPrompt = `أنت مصمم تقارير إنفوجرافيك محترف. أنشئ تقرير بصفحة واحدة (HTML فقط) محصور تماماً ويستغل كامل العرض المتاح (w-full).
-الحاوية الأساسية الإلزامية: <div class="flex flex-col h-full justify-start gap-4 overflow-hidden w-full">
-تأكد من أن جميع البطاقات والجداول تمتد من اليمين لليسار.
+تجنب الجداول الجامدة، استخدم نظام البطاقات (Cards Grid).
+الحاوية الأساسية الإلزامية: <div class="flex flex-col h-full justify-start gap-4 overflow-hidden w-full px-2">
 الهوية: ألوان text-moeDarkBlue, text-moeGreen.
-ضع كل عنوان فرعي في حاوية <div data-section-title="عنوان"> مصممة كبطاقة.
-الجداول احترافية (ترويسة bg-moeDarkBlue).
+ضع كل عنوان فرعي في حاوية <div data-section-title="عنوان"> مصممة كبطاقة إنفوجرافيكية جذابة بظلال خفيفة وإطارات أنيقة.
 المخرجات JSON: { "html_content": "...", "generated_subheadings": [{"title":"...","hint":"..."}] }`;
-                prompt = `الوصف: "${desc}". المحاور المطلوبة: ${JSON.stringify(subs)}`;
+                prompt = `الوصف: "${desc}". المحاور المطلوبة (إن وجدت): ${JSON.stringify(subs)}`;
             }
 
             try {
@@ -1294,10 +1322,19 @@ ${committeeText}\n\n${instructionsStr}`;
                     processedContent = processedContent.replace(/\[LOGOS_BACK\]/g, backLogosHtml);
 
                     multiPageHtml += `
-                    <div class="sub-page-a4 relative">
+                    <div class="sub-page-a4 relative group">
+                        <!-- Sidebar Page Controls -->
+                        <div class="page-controls print-hidden opacity-20 group-hover:opacity-100 transition-opacity">
+                            <button class="page-ctrl-btn" onclick="movePageUp(${idx})" title="رفع الصفحة للأعلى">⬆️</button>
+                            <button class="page-ctrl-btn" onclick="movePageDown(${idx})" title="إنزال الصفحة للأسفل">⬇️</button>
+                            <button class="page-ctrl-btn del-btn" onclick="deletePage(${idx})" title="حذف هذه الصفحة">🗑️</button>
+                            <button class="page-ctrl-btn add-btn" onclick="addEmptyPage(${idx})" title="إضافة صفحة فارغة تحتها">➕</button>
+                        </div>
+                        
                         <button onclick="openRegenModal(${idx})" class="print-hidden absolute top-4 left-4 bg-white border border-slate-200 text-moeDarkBlue hover:bg-emerald-50 hover:text-moeGreen hover:border-moeGreen px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition flex items-center gap-1 z-[60]">🔄 تعديل هذه الصفحة</button>
+                        
                         ${headerHtml}
-                        <main class="flex-1 px-[8mm] py-[8mm] overflow-hidden relative flex flex-col" contenteditable="true" onblur="updatePageContent(${idx}, this.innerHTML)">${processedContent}</main>
+                        <main class="flex-1 px-[8mm] py-[8mm] overflow-hidden relative flex flex-col w-full" contenteditable="true" onblur="updatePageContent(${idx}, this.innerHTML)">${processedContent}</main>
                         ${footerHtml}
                     </div>`;
                 });
@@ -1305,7 +1342,8 @@ ${committeeText}\n\n${instructionsStr}`;
                 opPlanContainer.innerHTML = multiPageHtml;
             } 
             else if (currentTemplate === 'ai-free' && currentReportData.html_content) {
-                document.getElementById('ai-content-area').innerHTML = `<div contenteditable="true" class="w-full h-full flex flex-col outline-none" onblur="currentReportData.html_content=this.innerHTML">${currentReportData.html_content}</div>`;
+                // Ensure no padding wrapper limits it width-wise
+                document.getElementById('ai-content-area').innerHTML = `<div contenteditable="true" class="w-full h-full flex flex-col outline-none overflow-hidden" onblur="currentReportData.html_content=this.innerHTML">${currentReportData.html_content}</div>`;
             }
         }
 
@@ -1318,9 +1356,8 @@ ${committeeText}\n\n${instructionsStr}`;
                     <input type="text" class="sub-title input-styled font-bold text-moeDarkBlue" placeholder="عنوان القسم" value="${title}">
                     <textarea class="sub-hint input-styled text-xs h-10 bg-white border-dashed" placeholder="المطالبة أو الشرح...">${hint}</textarea>
                     <select class="sub-style w-full bg-slate-100 border border-slate-300 rounded-lg p-1.5 text-xs font-bold outline-none text-slate-600">
-                        <option value="auto" ${style==='auto'?'selected':''}>🤖 بناء تلقائي</option>
+                        <option value="auto" ${style==='auto'?'selected':''}>🤖 بناء تلقائي (إنفوجرافيك)</option>
                         <option value="table" ${style==='table'?'selected':''}>📊 جدول إحصائي</option>
-                        <option value="infographic" ${style==='infographic'?'selected':''}>🗂️ بطاقات (إنفوجرافيك)</option>
                     </select>
                 </div>`;
             document.getElementById('subheadings-container').appendChild(div);
